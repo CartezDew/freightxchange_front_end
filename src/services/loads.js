@@ -1,62 +1,49 @@
-import api from "./apiConfig.js";
+import api from './apiConfig';
 
-export const getCats = async () => {
+// Get all loads
+export const getLoads = async () => {
   try {
-    const response = await api.get("/cats/");
+    const response = await api.get('/loads/');
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const getCat = async (id) => {
+// Get one load by ID
+export const getLoad = async (id) => {
   try {
-    const response = await api.get(`/cats/${id}/`);
+    const response = await api.get(`/loads/${id}/`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const createCat = async (catData) => {
+// Create a new load (broker only)
+export const createLoad = async (loadData) => {
   try {
-    const response = await api.post("/cats/", catData);
+    const response = await api.post('/loads/', loadData);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const updateCat = async (id, catData) => {
+// Update an existing load
+export const updateLoad = async (id, loadData) => {
   try {
-    const response = await api.put(`/cats/${id}/`, catData);
+    const response = await api.put(`/loads/${id}/`, loadData);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteCat = async (id) => {
+// Delete a load
+export const deleteLoad = async (id) => {
   try {
-    const response = await api.delete(`/cats/${id}/`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const addToyForCat = async (catId, toyId) => {
-  try {
-    const response = await api.post(`cats/${catId}/add_toy/${toyId}/`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const removeToyFromCat = async (catId, toyId) => {
-  try {
-    const response = await api.post(`cats/${catId}/remove_toy/${toyId}/`);
+    const response = await api.delete(`/loads/${id}/`);
     return response.data;
   } catch (error) {
     throw error;
