@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../services/users.js";
-import splash from "../assets/splash.svg";
+
+
 // import "./Home.css";
 
 function Home({ setUser }) {
@@ -49,10 +50,11 @@ function Home({ setUser }) {
 
   return (
     <div className="home-container">
-      <div className="home-image">
-        <img src={splash} alt="splash" />
-      </div>
+
+      <div>
+
       <div className="home-form-container">
+
         <form className="home-form" onSubmit={handleSubmit}>
           <h1>Login</h1>
 
