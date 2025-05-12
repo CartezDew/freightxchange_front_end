@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react'
 import { verifyUser } from './services/users.js'
 import Nav from './components/Nav'
-import Home from './pages/Home'
-import Register from './pages/Register'
-import Profile from './pages/Profile'
-import LogOut from './pages/LogOut.jsx'
-import Loads from './pages/Loads'
-import LoadDetail from './pages/LoadDetail'
-import NewLoad from './pages/NewLoad'
-import EditLoad from './pages/EditLoad'
-import Offers from './pages/Offers'
+import Home from './src/pages/Home'
+import Register from './src/pages/Register'
+import Profile from './src/pages/Profile'
+import LogOut from './src/pages/LogOut.jsx'
+import Loads from './src/pages/Loads'
+import LoadDetail from './src/pages/LoadDetail'
+import NewLoad from './src/pages/NewLoad'
+import EditLoad from './src/pages/EditLoad'
+import Offers from './src/pages/Offers'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
 function App() {
-    const [user, setUser] = useState(null):
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -43,3 +43,5 @@ function App() {
         </>
     )
 }
+
+export default App
