@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react'
-import { verifyUser } from './services/users.js'
+import { verifyUser } from './src/services/users.js'
 import Nav from './components/Nav'
-import Home from './pages/Home'
+import Home from './src/pages/Home.jsx'
 import Register from './pages/Register'
-import Profile from './pages/Profile'
-import LogOut from './pages/LogOut.jsx'
-import Loads from './pages/Loads'
-import LoadDetail from './pages/LoadDetail'
-import NewLoad from './pages/NewLoad'
-import EditLoad from './pages/EditLoad'
-import Offers from './pages/Offers'
+import Profile from './src/pages/Profile.jsx'
+import LogOut from './src/pages/LogOut.jsx'
+import Loads from './src/pages/Loads.jsx'
+import LoadDetail from './src/pages/LoadDetail.jsx'
+import NewLoad from './src/pages/NewLoad.jsx'
+import EditLoad from './src/pages/EditLoad.jsx'
+import Offers from './src/pages/Offers.jsx'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
 function App() {
-    const [user, setUser] = useState(null):
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
