@@ -28,7 +28,7 @@ function Home({ setUser }) {
     try {
       const userData = await signIn(form);
       setUser(userData);
-      navigate(`/profile/`); // or `/profile/${userData.id}` if needed
+      navigate("/profile"); // or `/profile/${userData.id}` if needed
     } catch (error) {
       console.error("Login failed:", error);
       setForm((prevForm) => ({
