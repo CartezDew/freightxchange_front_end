@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../services/users.js";
 
+
+// import "./Home.css";
+
 function Home({ setUser }) {
   const navigate = useNavigate();
 
@@ -27,58 +30,57 @@ function Home({ setUser }) {
     try {
       const userData = await signIn(form);
       setUser(userData);
-
-      navigate("/cats");
+      navigate("/profile"); // or `/profile/${userData.id}` if needed
     } catch (error) {
-      console.error(error);
+      console.error("Login failed:", error);
       setForm((prevForm) => ({
+        ...prevForm,
         isError: true,
-        errorMsg: "Invalid Credentials",
-        username: prevForm.username,
+        errorMsg: "Invalid credentials",
         password: "",
       }));
     }
   };
 
   const renderError = () => {
-    const toggleForm = form.isError ? "danger" : "";
-
-    if (form.isError) {
-      return (
-        <button type="submit" className={toggleForm}>
-          {form.errorMsg}
-        </button>
-      );
-    } else {
-      return <button type="submit">Log In</button>;
-    }
+    return form.isError ? (
+      <p className="error-message">{form.errorMsg}</p>
+    ) : null;
   };
 
   return (
     <div className="home-container">
+
       <div>
+
+      <div className="home-form-container">
+
         <form className="home-form" onSubmit={handleSubmit}>
           <h1>Login</h1>
+
           <input
-            type='text'
-            name='username'
+            type="text"
+            name="username"
             value={form.username}
-            placeholder='Enter Username'
+            placeholder="Enter Username"
             onChange={handleChange}
             required
             autoComplete="off"
           />
+
           <input
-            type='password'
-            name='password'
+            type="password"
+            name="password"
             value={form.password}
-            placeholder='Enter Password'
+            placeholder="Enter Password"
             onChange={handleChange}
             required
             autoComplete="off"
           />
 
           {renderError()}
+
+          <button type="submit">Log In</button>
 
           <Link to="/register">
             <p>No account? Sign up here!</p>
