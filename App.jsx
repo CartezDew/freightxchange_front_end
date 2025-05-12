@@ -63,8 +63,9 @@ function App() {
         <Route path="/offers" element={<Offers />} />
         <Route path="/offers/:id" element={<OfferDetail />} />
       </Routes>
-    </>
-  );
+        </>
+    )
 }
 
-export default App;
+export default App
+

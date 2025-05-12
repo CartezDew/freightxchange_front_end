@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { NewLoad } from '../services/loads.js';
+import { NewLoad } from '../../services/loads.js';
 
 
 function NewLoad() {
