@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { NewLoad } from '../services/loads.js';
+import { createNewLoad } from '../services/loads.js';
 
 
 function NewLoad() {
@@ -21,7 +21,7 @@ function NewLoad() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await newLoad(load);
+    await createNewLoad(load);
     navigate("/loads");
   };
 
@@ -89,11 +89,11 @@ function NewLoad() {
           onChange={handleChange}
           required
         />
-          <input
-          className="equipment-requirement"
-          placeholder="Equipment"
-          name="equipment"
-          value={load.equipment}
+        <input
+          className="delivery-date"
+          placeholder="Delivery"
+          name="delivery"
+          value={load.delivery}
           onChange={handleChange}
           required
         />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-// import { verifyUser } from '../services/users.js'
+import { verifyUser } from './services/users.js'
 // import Nav from '../components/Nav.jsx'
 import Home from './pages/Home.jsx'
 // import Register from './pages/Register.jsx'
@@ -7,7 +7,7 @@ import Home from './pages/Home.jsx'
 // import LogOut from './pages/LogOut.jsx'
 // import Loads from './pages/Loads.jsx'
 // import LoadDetail from './pages/LoadDetail.jsx'
-// import NewLoad from './pages/NewLoad.jsx'
+import NewLoad from './pages/NewLoad.jsx'
 // import EditLoad from './pages/EditLoad.jsx'
 // import Offers from './pages/Offers.jsx'
 import { Routes, Route } from 'react-router-dom'
@@ -33,8 +33,8 @@ function App() {
         {/*<Route path="/register" element={<Register setUser={setUser} />} />*/}
         {/*<Route path="/profile/:Id" element={<Profile setUser={setUser} />} />*/}
         {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
-        {/*<Route path="/loads" element={<Loads />} />*/}
-        {/*<Route path="/loads/new" element={<NewLoad />} />*/}
+        <Route path="/loads" element={<Loads />} />
+        <Route path="/loads/new" element={<NewLoad />} />
         {/*<Route path="/loads/:loadId/edit" element={<EditLoad />} />*/}
         {/*<Route path="/loads/:loadId" element={<LoadDetail />} />*/}
         {/*<Route path="/loads/:loadId/delete" element={<DeleteLoad />} />*/}
