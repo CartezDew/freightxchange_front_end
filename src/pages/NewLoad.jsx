@@ -8,7 +8,6 @@ function NewLoad() {
 
   const [load, setLoad] = useState({
     name: "",
-    color: "",
   });
 
   const handleChange = (event) => {
@@ -43,10 +42,66 @@ function NewLoad() {
           autoFocus
         />
         <input
-          className="input-toy-color"
-          placeholder="Color"
-          name="color"
-          value={toy.color}
+          className="input-pickup-city"
+          placeholder="Pickup-City"
+          name="pickup-city"
+          value={load.pickup-city}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-pickup-state"
+          placeholder="Pickup-State"
+          name="pickup-state"
+          value={load.pickup-state}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-destination-city"
+          placeholder="Destination-City"
+          name="destination-city"
+          value={load.destination-city}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-destination-state"
+          placeholder="Destination-State"
+          name="destination-state"
+          value={load.destination-state}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="rate"
+          placeholder="Rate"
+          name="rate"
+          value={load.rate}
+          onChange={handleChange}
+          required
+        />
+         <input
+          className="equipment-requirement"
+          placeholder="Equipment"
+          name="equipment"
+          value={load.equipment}
+          onChange={handleChange}
+          required
+        />
+          <input
+          className="equipment-requirement"
+          placeholder="Equipment"
+          name="equipment"
+          value={load.equipment}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="commodity"
+          placeholder="Commodity"
+          name="commodity"
+          value={load.commodity}
           onChange={handleChange}
           required
         />
