@@ -1,5 +1,4 @@
-import { useState } from 'react'
-
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createNewLoad } from '../services/loads.js';
 
@@ -20,7 +19,6 @@ function NewLoad() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setLoad((prevLoad) => ({
       ...prevLoad,
       [name]: value,
@@ -44,57 +42,44 @@ function NewLoad() {
       </div>
       <form className="new-load-form" onSubmit={handleSubmit}>
         <input
-          className="load-name"
-          placeholder="Name"
-          name="name"
-          value={load.name}
-          onChange={handleChange}
-          required
-          autoFocus
-        />
-        <input
-          className="pickup-city"
+          name="pickup_city"
           placeholder="Pickup City"
-          name="pickup-city"
-          value={load.pickupCity}
+          value={load.pickup_city}
           onChange={handleChange}
           required
         />
         <input
-          className="pickup-state"
+          name="pickup_state"
           placeholder="Pickup State"
-          name="pickup-state"
-          value={load.pickupState}
-        />
-        <input
-          className="destination-city"
-          placeholder="Destination City"
-          name="destination-city"
-          value={load.destinationCity}
+          value={load.pickup_state}
           onChange={handleChange}
           required
         />
         <input
-          className="destination-state"
-          placeholder="Destination State"
-          name="destination-state"
-          value={load.destinationState}
+          name="delivery_city"
+          placeholder="Delivery City"
+          value={load.delivery_city}
           onChange={handleChange}
           required
         />
         <input
-          className="rate"
-          placeholder="Rate"
+          name="delivery_state"
+          placeholder="Delivery State"
+          value={load.delivery_state}
+          onChange={handleChange}
+          required
+        />
+        <input
           name="rate"
+          placeholder="Rate"
+          type="number"
           value={load.rate}
           onChange={handleChange}
           required
         />
         <select
-          className="equipment"
-          placeholder="Equipment Requirements"
-          name="equipment"
-          value={load.equipment}
+          name="equipment_requirements"
+          value={load.equipment_requirements}
           onChange={handleChange}
           required
         >
@@ -113,34 +98,28 @@ function NewLoad() {
           <option value="Lowboy">Lowboy</option>
           <option value="Power Only">Power Only</option>
           <option value="Reefer">Reefer</option>
-          <option value="Step Deck">Step Deck</option>  
+          <option value="Step Deck">Step Deck</option>
           <option value="Tanker">Tanker</option>
           <option value="Walking Floor">Walking Floor</option>
-          </select>
-        
+        </select>
         <input
-          className="commodity"
-          placeholder="Commodity"
           name="commodity"
+          placeholder="Commodity"
           value={load.commodity}
           onChange={handleChange}
           required
         />
         <input
           type="date"
-          className="pickup-date"
-          placeholder="Pickup Date"
           name="pickup_date"
-          value={load.pickupDate}
+          value={load.pickup_date}
           onChange={handleChange}
           required
         />
         <input
           type="date"
-          className="delivery-date"
-          placeholder="Delivery Date"
           name="delivery_date"
-          value={load.deliveryDate}
+          value={load.delivery_date}
           onChange={handleChange}
           required
         />
