@@ -34,7 +34,7 @@ function NewLoad() {
       </div>
       <form className="new-load-form" onSubmit={handleSubmit}>
         <input
-          className="input-load-name"
+          className="load-name"
           placeholder="Name"
           name="name"
           value={load.name}
@@ -43,7 +43,7 @@ function NewLoad() {
           autoFocus
         />
         <input
-          className="input-pickup-city"
+          className="pickup-city"
           placeholder="Pickup-City"
           name="pickup-city"
           value={load.pickup-city}
@@ -51,7 +51,7 @@ function NewLoad() {
           required
         />
         <input
-          className="input-pickup-state"
+          className="pickup-state"
           placeholder="Pickup-State"
           name="pickup-state"
           value={load.pickup-state}
@@ -59,7 +59,7 @@ function NewLoad() {
           required
         />
         <input
-          className="input-destination-city"
+          className="destination-city"
           placeholder="Destination-City"
           name="destination-city"
           value={load.destination-city}
@@ -67,7 +67,7 @@ function NewLoad() {
           required
         />
         <input
-          className="input-destination-state"
+          className="destination-state"
           placeholder="Destination-State"
           name="destination-state"
           value={load.destination-state}
@@ -83,7 +83,7 @@ function NewLoad() {
           required
         />
          <input
-          className="equipment-requirement"
+          className="equipment"
           placeholder="Equipment"
           name="equipment"
           value={load.equipment}
