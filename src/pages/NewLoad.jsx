@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { createNewLoad } from '../services/loads.js';
@@ -46,7 +45,7 @@ function NewLoad() {
           className="pickup-city"
           placeholder="Pickup-City"
           name="pickup-city"
-          value={load.pickup-city}
+          value={load.pickupCity}
           onChange={handleChange}
           required
         />
@@ -54,7 +53,7 @@ function NewLoad() {
           className="pickup-state"
           placeholder="Pickup-State"
           name="pickup-state"
-          value={load.pickup-state}
+          value={load.pickupState}
           onChange={handleChange}
           required
         />
@@ -62,7 +61,7 @@ function NewLoad() {
           className="destination-city"
           placeholder="Destination-City"
           name="destination-city"
-          value={load.destination-city}
+          value={load.destinationCity}
           onChange={handleChange}
           required
         />
@@ -70,7 +69,7 @@ function NewLoad() {
           className="destination-state"
           placeholder="Destination-State"
           name="destination-state"
-          value={load.destination-state}
+          value={load.destinationState}
           onChange={handleChange}
           required
         />
