@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState } from 'react'
+
 import { useNavigate } from 'react-router-dom';
 import { createLoad } from '../services/loads.js';
 
@@ -43,6 +44,19 @@ function NewLoad() {
       </div>
       <form className="new-load-form" onSubmit={handleSubmit}>
         <input
+          className="load-name"
+          placeholder="Name"
+          name="name"
+          value={load.name}
+          onChange={handleChange}
+          required
+          autoFocus
+        />
+        <input
+          className="pickup-city"
+          placeholder="Pickup-City"
+          name="pickup-city"
+          value={load.pickupCity}
           className="input-pickup-city"
           placeholder="Pickup City"
           name="pickup_city"
@@ -51,6 +65,11 @@ function NewLoad() {
           required
         />
         <input
+          className="pickup-state"
+          placeholder="Pickup-State"
+          name="pickup-state"
+          value={load.pickupState}
+
           className="input-pickup-state"
           placeholder="Pickup State"
           name="pickup_state"
@@ -59,6 +78,10 @@ function NewLoad() {
           required
         />
         <input
+          className="destination-city"
+          placeholder="Destination-City"
+          name="destination-city"
+          value={load.destinationCity}
           className="input-delivery-city"
           placeholder="Delivery City"
           name="delivery_city"
@@ -67,6 +90,10 @@ function NewLoad() {
           required
         />
         <input
+          className="destination-state"
+          placeholder="Destination-State"
+          name="destination-state"
+          value={load.destinationState}
           className="input-delivery-state"
           placeholder="Delivery State"
           name="delivery_state"
@@ -82,6 +109,11 @@ function NewLoad() {
           onChange={handleChange}
           required
         />
+         <input
+          className="equipment"
+          placeholder="Equipment"
+          name="equipment"
+          value={load.equipment}
         <input
           className="equipment-requirement"
           placeholder="Equipment Requirements"

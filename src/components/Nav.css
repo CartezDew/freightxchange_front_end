@@ -1,0 +1,36 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 1rem 2rem;
+    color: white;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    color: #ffcc00; 
+  }
+  
+  .welcome {
+    font-size: 1rem;
+    font-style: italic;
+    color: #ccc;
+  }
+
+.broker .nav-link { color: lightblue; }
+
+.carrier .nav-link { color: lightgreen; }
+
+  

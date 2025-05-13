@@ -1,0 +1,35 @@
+.load-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .load-details-link {
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+  }
+  
+  .bid-button {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: #0066cc;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+  }
+  
+  .bid-button:hover {
+    background-color: #004d99;
+  }
+  

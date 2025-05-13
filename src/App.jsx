@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { verifyUser } from './services/users.js'
-// import Nav from '../components/Nav.jsx'
+import Nav from './components/Nav.jsx'
 import Home from './pages/Home.jsx'
 import Register from './pages/Register.jsx'
 import Profile from './pages/Profile.jsx'
 // import LogOut from './pages/LogOut.jsx'
+import Loads from './pages/Loads.jsx'
+// import LoadDetail from './pages/LoadDetail.jsx'
+
 // import Loads from './pages/Loads.jsx'
 import LoadDetail from './pages/LoadDetail.jsx'
 import NewLoad from './pages/NewLoad.jsx'
@@ -27,11 +30,13 @@ function App() {
 
     return (
         <>
-         {/*<Nav user={user} />*/}
+         <Nav user={user} />
       <Routes>
         <Route path="/" element={<Home setUser={setUser} />} />
         <Route path="/register" element={<Register setUser={setUser} />} />
-        <Route path="/profile/" element={<Profile/>} />
+        <Route path="/profile" element={<Profile/>} />
+        {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
+        <Route path="/loads" element={<Loads />} />
         {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
         {/*<Route path="/loads" element={<Loads />} />*/}
         <Route path="/loads/new" element={<NewLoad />} />

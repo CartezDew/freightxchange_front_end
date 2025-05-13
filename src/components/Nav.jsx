@@ -1,8 +1,12 @@
 import { NavLink } from "react-router-dom";
+import './Nav.css'
 
 function Nav({ user }) {
   const authenticatedOptions = (
     <>
+      <NavLink className="nav-link" to="/profile">
+        My Profile
+      </NavLink>
       <NavLink className="nav-link" to="/loads">
         Loads
       </NavLink>
@@ -14,17 +18,17 @@ function Nav({ user }) {
 
   const unauthenticatedOptions = (
     <>
-      <NavLink className="nav-link" to="/">
-        Log-In
+      <NavLink className="nav-link" to="/profile">
+        My Profile
       </NavLink>
-      <NavLink className="nav-link" to="/register">
-        Register
+      <NavLink className="nav-link" to="/loads">
+        Loads
       </NavLink>
     </>
   );
 
   return (
-    <nav>
+    <nav className={`nav ${user?.role === 'broker' ? 'broker' : 'carrier'}`}>
       {user && <div className="link welcome">Welcome, {user.username}</div>}
       <div className="nav-links">
         {user ? authenticatedOptions : unauthenticatedOptions}

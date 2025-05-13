@@ -1,6 +1,11 @@
 import api from './apiConfig';
 
+
+
+
+
 // Get all loads
+
 export const getLoads = async () => {
   try {
     const response = await api.get('/loads/');
@@ -20,8 +25,9 @@ export const getLoad = async (id) => {
   }
 };
 
+
 // Create a new load (broker only)
-export const createLoad = async (loadData) => {
+export const createNewLoad = async (loadData) => {
   try {
     const response = await api.post('/loads/', loadData);
     return response.data;
@@ -48,4 +54,4 @@ export const deleteLoad = async (id) => {
   } catch (error) {
     throw error;
   }
-};
+  };
