@@ -1,14 +1,20 @@
-
-import { useState } from 'react'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createNewLoad } from '../services/loads.js';
-
+import { createLoad } from '../services/loads.js';
 
 function NewLoad() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [load, setLoad] = useState({
-    name: "",
+    pickup_city: "",
+    pickup_state: "",
+    delivery_city: "",
+    delivery_state: "",
+    rate: "",
+    equipment_requirements: "",
+    pickup_date: "",
+    delivery_date: "",
+    commodity: ""
   });
 
   const handleChange = (event) => {
@@ -22,55 +28,49 @@ function NewLoad() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await createNewLoad(load);
-    navigate("/loads");
+    try {
+      await createLoad(load);
+      navigate("/loads");
+    } catch (error) {
+      console.error("Failed to create load:", error);
+    }
   };
 
   return (
-    <div className='new-load-root'>
+    <div className="new-load-root">
       <div className="new-load-heading">
         <h2>Create a New Load</h2>
-        <img />
       </div>
       <form className="new-load-form" onSubmit={handleSubmit}>
         <input
-          className="input-load-name"
-          placeholder="Name"
-          name="name"
-          value={load.name}
-          onChange={handleChange}
-          required
-          autoFocus
-        />
-        <input
           className="input-pickup-city"
-          placeholder="Pickup-City"
-          name="pickup-city"
-          value={load.pickup-city}
+          placeholder="Pickup City"
+          name="pickup_city"
+          value={load.pickup_city}
           onChange={handleChange}
           required
         />
         <input
           className="input-pickup-state"
-          placeholder="Pickup-State"
-          name="pickup-state"
-          value={load.pickup-state}
+          placeholder="Pickup State"
+          name="pickup_state"
+          value={load.pickup_state}
           onChange={handleChange}
           required
         />
         <input
-          className="input-destination-city"
-          placeholder="Destination-City"
-          name="destination-city"
-          value={load.destination-city}
+          className="input-delivery-city"
+          placeholder="Delivery City"
+          name="delivery_city"
+          value={load.delivery_city}
           onChange={handleChange}
           required
         />
         <input
-          className="input-destination-state"
-          placeholder="Destination-State"
-          name="destination-state"
-          value={load.destination-state}
+          className="input-delivery-state"
+          placeholder="Delivery State"
+          name="delivery_state"
+          value={load.delivery_state}
           onChange={handleChange}
           required
         />
@@ -82,19 +82,29 @@ function NewLoad() {
           onChange={handleChange}
           required
         />
-         <input
+        <input
           className="equipment-requirement"
-          placeholder="Equipment"
-          name="equipment"
-          value={load.equipment}
+          placeholder="Equipment Requirements"
+          name="equipment_requirements"
+          value={load.equipment_requirements}
           onChange={handleChange}
           required
         />
         <input
+          type="date"
+          className="pickup-date"
+          placeholder="Pickup Date"
+          name="pickup_date"
+          value={load.pickup_date}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="date"
           className="delivery-date"
-          placeholder="Delivery"
-          name="delivery"
-          value={load.delivery}
+          placeholder="Delivery Date"
+          name="delivery_date"
+          value={load.delivery_date}
           onChange={handleChange}
           required
         />
@@ -109,7 +119,7 @@ function NewLoad() {
         <button type="submit">Submit</button>
       </form>
     </div>
-  )
+  );
 }
 
-export default NewLoad
+export default NewLoad;
