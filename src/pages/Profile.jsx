@@ -10,7 +10,7 @@ function Profile() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("access");
       const storedRole = localStorage.getItem("role");
       const profileId = localStorage.getItem("profileId");
 

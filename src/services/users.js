@@ -62,7 +62,7 @@ export const verifyUser = async () => {
         localStorage.setItem('access', resp.data.access);
         return true;
       } catch (refreshError) {
-        signOut();
+        // signOut();
         return false;
       }
     } else {
