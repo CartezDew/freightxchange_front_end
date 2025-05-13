@@ -19,8 +19,6 @@ function Profile() {
         return;
       }
 
-      setRole(storedRole);
-
       try {
         const res = await api.get(`/${storedRole}-profiles/${profileId}/`);
         setProfile(res.data);
