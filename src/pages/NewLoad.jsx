@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { useNavigate } from 'react-router-dom';
-import { createLoad } from '../services/loads.js';
+import { createNewLoad } from '../services/loads.js';
 
 function NewLoad() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ function NewLoad() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await createLoad(load);
+      await createNewLoad(load);
       navigate("/loads");
     } catch (error) {
       console.error("Failed to create load:", error);

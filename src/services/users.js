@@ -5,6 +5,8 @@ export const signUp = async (credentials) => {
     const resp = await api.post('/register/', credentials);
     localStorage.setItem('access', resp.data.access);
     localStorage.setItem('refresh', resp.data.refresh);
+    localStorage.setItem("role", resp.data.role);
+    localStorage.setItem("profileId", resp.data.profile_id);
     return resp.data.user;
   } catch (error) {
     throw error;
@@ -13,12 +15,6 @@ export const signUp = async (credentials) => {
 
 export const signIn = async (credentials) => {
   try {
-    // Clear any old data first
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("role");
-    localStorage.removeItem("profileId");
-
     const resp = await api.post("/login/", credentials);
     const { access, refresh, role, profile_id } = resp.data;
 
@@ -39,49 +35,24 @@ export const signIn = async (credentials) => {
   }
 };
 
-
-
-
 export const signOut = () => {
   localStorage.removeItem('access');
   localStorage.removeItem('refresh');
+  localStorage.removeItem('role');
+  localStorage.removeItem('profileId');
 };
 
 export const verifyUser = async () => {
-  const access = localStorage.getItem("access");
   const role = localStorage.getItem("role");
   const profileId = localStorage.getItem("profileId");
 
-  console.log("[verifyUser] localStorage:", { access, role, profileId });
-
-  if (!access || !role || !profileId) return false;
+  if (!role || !profileId) return false;
 
   try {
-    await api.post('/api/token/verify/', { token: access });
     const res = await api.get(`/${role}-profiles/${profileId}/`);
-    console.log("[verifyUser] profile fetched:", res.data);
     return res.data;
   } catch (err) {
-    const refresh = localStorage.getItem("refresh");
-    console.warn("[verifyUser] token expired, attempting refresh");
-
-    if (refresh) {
-      try {
-        const resp = await api.post('/api/token/refresh/', { refresh });
-        localStorage.setItem("access", resp.data.access);
-
-        const profileRes = await api.get(`/${role}-profiles/${profileId}/`);
-        console.log("[verifyUser] profile after refresh:", profileRes.data);
-        return profileRes.data;
-      } catch (refreshError) {
-        console.error("[verifyUser] refresh failed:", refreshError);
-        // signOut(); // TODO fix this signout logic
-        return false;
-      }
-    } else {
-      console.warn("[verifyUser] no refresh token");
-      signOut();
-      return false;
-    }
+    console.error(err);
+    return false;
   }
 };
