@@ -6,13 +6,22 @@ function LoadDetail() {
   const { loadId } = useParams();
   const navigate = useNavigate();
   const [load, setLoad] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const fetchLoad = async () => {
       try {
         const loadData = await getLoad(loadId);
-        console.log("LOAD DATA:", loadData); // 👈 Add this
         setLoad(loadData);
+
+        // Compare current user's profile ID with broker ID on the load
+        const currentProfileId = localStorage.getItem("profileId");
+        if (
+          loadData.broker &&
+          String(loadData.broker) === String(currentProfileId)
+        ) {
+          setIsOwner(true);
+        }
       } catch (error) {
         console.error("Failed to fetch load:", error);
       }
@@ -43,12 +52,14 @@ function LoadDetail() {
       <p><strong>Location Date:</strong> {new Date(load.location_date).toLocaleDateString()}</p>
       <p><strong>Commodity:</strong> {load.commodity}</p>
 
-      <div className="button-group">
-        <Link to={`/loads/${loadId}/edit`}>
-          <button>Edit Load</button>
-        </Link>
-        <button onClick={handleDelete}>Delete Load</button>
-      </div>
+      {isOwner && (
+        <div className="button-group">
+          <Link to={`/loads/${loadId}/edit`}>
+            <button>Edit Load</button>
+          </Link>
+          <button onClick={handleDelete}>Delete Load</button>
+        </div>
+      )}
     </div>
   );
 }
