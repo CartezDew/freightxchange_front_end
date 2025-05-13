@@ -1,9 +1,10 @@
 import api from './apiConfig';
 
 
-export const getLoads = async () => {
-  try {
-    const response = await api.get("/loads/");
+
+
+
+// Get all loads
 
 export const getLoads = async () => {
   try {
@@ -14,9 +15,7 @@ export const getLoads = async () => {
   }
 };
 
-
 // Get one load by ID
-
 export const getLoad = async (id) => {
   try {
     const response = await api.get(`/loads/${id}/`);
@@ -27,24 +26,17 @@ export const getLoad = async (id) => {
 };
 
 
+// Create a new load (broker only)
 export const createNewLoad = async (loadData) => {
   try {
-    const response = await api.post("/loads/", loadData);
-
-// Create a new load (broker only)
-export const createLoad = async (loadData) => {
-  try {
     const response = await api.post('/loads/', loadData);
-
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-
 // Update an existing load
-
 export const updateLoad = async (id, loadData) => {
   try {
     const response = await api.put(`/loads/${id}/`, loadData);
@@ -54,9 +46,7 @@ export const updateLoad = async (id, loadData) => {
   }
 };
 
-
 // Delete a load
-
 export const deleteLoad = async (id) => {
   try {
     const response = await api.delete(`/loads/${id}/`);
@@ -64,4 +54,4 @@ export const deleteLoad = async (id) => {
   } catch (error) {
     throw error;
   }
-};
+  };
