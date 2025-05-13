@@ -74,6 +74,7 @@ export const verifyUser = async () => {
         console.log("[verifyUser] profile after refresh:", profileRes.data);
         return profileRes.data;
       } catch (refreshError) {
+        console.error("[verifyUser] refresh failed:", refreshError);
         // signOut(); // TODO fix this signout logic
         return false;
       }
@@ -84,5 +85,3 @@ export const verifyUser = async () => {
     }
   }
 };
-
-
