@@ -1,7 +1,16 @@
-import { NavLink } from "react-router-dom";
-import './Nav.css'
+import { NavLink, useNavigate } from "react-router-dom";
+import { signOut } from "../services/users"; // make sure this is imported
+import './Nav.css';
 
 function Nav({ user }) {
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();           // clear localStorage
+    navigate("/");       // redirect to home
+    window.location.reload(); // optional: force re-render App (reset user state)
+  };
+
   const authenticatedOptions = (
     <>
       <NavLink className="nav-link" to="/profile">
@@ -13,16 +22,16 @@ function Nav({ user }) {
       <NavLink className="nav-link" to="/loads/new">
         Add Load
       </NavLink>
+      <button className="nav-link" onClick={handleSignOut}>
+        Sign Out
+      </button>
     </>
   );
 
   const unauthenticatedOptions = (
     <>
-      <NavLink className="nav-link" to="/profile">
-        My Profile
-      </NavLink>
-      <NavLink className="nav-link" to="/loads">
-        Loads
+      <NavLink className="nav-link" to="/register">
+        Register
       </NavLink>
     </>
   );
