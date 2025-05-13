@@ -19,6 +19,8 @@ function Profile() {
         return;
       }
 
+      setRole(storedRole); 
+
       try {
         const res = await api.get(`/${storedRole}-profiles/${profileId}/`);
         setProfile(res.data);
@@ -39,6 +41,8 @@ function Profile() {
       <h1>Welcome, {profile.user}</h1>
       <p>Company Name: {profile.company_name}</p>
       <p>Authority ID: {profile.authority_id}</p>
+
+
 
       {/* Conditionally render based on role */}
       {role === "broker" && profile.policy_id && (
