@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import LoadCard from '../components/LoadCard.jsx';
 import { getLoads } from '../services/loads';
 import Nav from '../components/Nav.jsx';
-import './Loads.css';
+import '../components/LoadList.css';
 
 const Loads = () => {
     const [loads, setLoads] = useState([])
