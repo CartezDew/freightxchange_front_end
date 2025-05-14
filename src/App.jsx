@@ -73,6 +73,7 @@ function App() {
                 {/*<Route path="/loads/:loadId/delete" element={<DeleteLoad />} />*/}
                 {/*<Route path="/offers/:offerId" element={<Offers />} />*/}
               </Routes>
+              </ThemeProvider>
     )
 }
 
