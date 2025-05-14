@@ -6,13 +6,7 @@ import { createOffer } from '../services/offers';
 const LoadCard = ({ load }) => {
   const role = localStorage.getItem('role'); // 'carrier' or 'broker'
 
-  const handleBid = async () => {
-    const amount = prompt("Enter your bid amount:");
-
-    if (!amount || isNaN(amount)) {
-      alert("Please enter a valid number.");
-      return;
-    }
+  // Modal + bid state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState('');
   const [modalStage, setModalStage] = useState('input'); // 'input' | 'success' | 'error'
@@ -32,23 +26,23 @@ const LoadCard = ({ load }) => {
   };
 
   const handleSubmitBid = async () => {
-    if (!bidAmount) return;
+    if (!bidAmount || isNaN(bidAmount)) {
+      setModalStage('error');
+      setModalMessage('Please enter a valid number.');
+      return;
+    }
 
     try {
       const offerData = {
         load: load.id,
-        amount: parseFloat(amount),
         amount: parseFloat(bidAmount),
       };
 
       const response = await createOffer(offerData);
-
-      // Show success message in modal
       setModalStage('success');
       setModalMessage("Your offer was submitted!");
       console.log("Created offer:", response);
     } catch (error) {
-      // Show error message in modal
       setModalStage('error');
       setModalMessage(
         error.response?.data?.error || "Something went wrong submitting your bid."
@@ -58,25 +52,6 @@ const LoadCard = ({ load }) => {
   };
 
   return (
-    <div className="load-card">
-      <Link to={`/loads/${load.id}`} className="load-card-link">
-        <h1>{load.name}</h1>
-        <h2>Pick-up Location: {load.pickupCity}, {load.pickupState}</h2>
-        <h2>Drop-off Location: {load.dropoffCity}, {load.dropoffState}</h2>
-        <h2>Rate: {load.rate}</h2>
-        <h2>Equipment Requirement: {load.equipment}</h2>
-        <h2>Commodity: {load.commodity}</h2>
-        <h2>Delivery Date: {load.deliveryDate}</h2>
-      </Link>
-
-      {/* Show Bid button only if user is a carrier */}
-      {role === 'carrier' && (
-        <button className="bid-button" onClick={handleBid}>
-          Bid
-        </button>
-      )}
-    </div>
-=======
     <>
       <div className="load-card">
         <Link to={`/loads/${load.id}`} className="load-card-link">
@@ -88,9 +63,12 @@ const LoadCard = ({ load }) => {
           <h2>Commodity: {load.commodity}</h2>
           <h2>Delivery Date: {load.deliveryDate}</h2>
         </Link>
-        <button className="bid-button" onClick={openModal}>
-          Bid
-        </button>
+
+        {role === 'carrier' && (
+          <button className="bid-button" onClick={openModal}>
+            Bid
+          </button>
+        )}
       </div>
 
       {isModalOpen && (

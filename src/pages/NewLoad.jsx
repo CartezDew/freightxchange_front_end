@@ -62,7 +62,6 @@ function NewLoad() {
           onChange={handleChange}
           required
         />
-
         <TextField
           label="Pickup City"
           name="pickup_city"
@@ -88,33 +87,6 @@ function NewLoad() {
           label="Delivery State"
           name="delivery_state"
           value={load.delivery_state}
-        <input
-          className="pickup-city"
-          placeholder="Pickup City"
-          name="pickup-city"
-          value={load.pickupCity}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="pickup-state"
-          placeholder="Pickup State"
-          name="pickup-state"
-          value={load.pickupState}
-        />
-        <input
-          className="destination-city"
-          placeholder="Destination City"
-          name="destination-city"
-          value={load.destinationCity}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="destination-state"
-          placeholder="Destination State"
-          name="destination-state"
-          value={load.destinationState}
           onChange={handleChange}
           required
         />
@@ -130,45 +102,9 @@ function NewLoad() {
           label="Equipment Requirements"
           name="equipment_requirements"
           value={load.equipment_requirements}
-
-        <select
-          className="equipment"
-          placeholder="Equipment Requirements"
-          name="equipment"
-          value={load.equipment}
-          onChange={handleChange}
-          required
-        >
-          <option value="">-- Select Equipment --</option>
-          <option value="Box Truck">Box Truck</option>
-          <option value="Car Hauler">Car Hauler</option>
-          <option value="Conestoga">Conestoga</option>
-          <option value="Container Chassis">Container Chassis</option>
-          <option value="Dry Van">Dry Van</option>
-          <option value="Dumptruck">Dumptruck</option>
-          <option value="Flatbed">Flatbed</option>
-          <option value="Gooseneck">Gooseneck</option>
-          <option value="Hotshot">Hotshot</option>
-          <option value="Livestock">Livestock Trailer</option>
-          <option value="Logging">Logging</option>
-          <option value="Lowboy">Lowboy</option>
-          <option value="Power Only">Power Only</option>
-          <option value="Reefer">Reefer</option>
-          <option value="Step Deck">Step Deck</option>  
-          <option value="Tanker">Tanker</option>
-          <option value="Walking Floor">Walking Floor</option>
-          </select>
-        
-        <input
-          className="commodity"
-          placeholder="Commodity"
-          name="commodity"
-          value={load.commodity}
-
           onChange={handleChange}
           select
           required
-
         >
           {[
             "Box Truck", "Car Hauler", "Conestoga", "Container Chassis",
@@ -183,10 +119,6 @@ function NewLoad() {
         </TextField>
         <TextField
           label="Commodity"
-
-        />
-        <input
-
           name="commodity"
           value={load.commodity}
           onChange={handleChange}
@@ -204,12 +136,8 @@ function NewLoad() {
         <TextField
           label="Delivery Date"
           name="delivery_date"
-
           type="date"
           value={load.delivery_date}
-
-          value={load.deliveryDate}
-
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
           required
