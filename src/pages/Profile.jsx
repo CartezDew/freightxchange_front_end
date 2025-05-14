@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
 import api from "../services/apiConfig";
 import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Alert,
+} from "@mui/material";
 
-function Profile({user}) {
+function Profile({ user }) {
   const [profile, setProfile] = useState(null);
   const [role, setRole] = useState(null);
   const [error, setError] = useState(null);
@@ -16,7 +26,7 @@ function Profile({user}) {
       const profileId = localStorage.getItem("profileId");
 
       if (!token || !storedRole || !profileId) {
-        navigate("/"); // Not logged in
+        navigate("/");
         return;
       }
 
@@ -26,7 +36,6 @@ function Profile({user}) {
         const res = await api.get(`/${storedRole}-profiles/${profileId}/`);
         setProfile(res.data);
 
-        // For carriers: fetch won bids
         if (storedRole === "carrier") {
           const bidRes = await api.get(`/offers/?status=awarded&carrier=${profileId}`);
           setWonBids(bidRes.data);
@@ -40,8 +49,13 @@ function Profile({user}) {
     fetchProfile();
   }, [navigate]);
 
-  if (error) return <p>{error}</p>;
-  if (!profile) return <p>Loading profile...</p>;
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+
+  if (!profile) {
+    return <Typography sx={{ m: 3 }}>Loading profile...</Typography>;
+  }
 
   const isCarrierMissingInfo = role === "carrier" &&
     (!profile.company_name || !profile.policy_id || !profile.license_id || !profile.equipment_type);
@@ -51,64 +65,85 @@ function Profile({user}) {
 
   if (isCarrierMissingInfo || isBrokerMissingInfo) {
     return (
-      <div className="profile-page">
-        <h2>Welcome, {profile.user.username}</h2>
-        <p>You must complete your profile before you can {role === "carrier" ? "bid on loads" : "post a load"}.</p>
-        <p>Please ensure the following fields are filled out:</p>
-        <ul>
+      <Container maxWidth="sm">
+        <Typography variant="h5" sx={{ mt: 4 }}>
+          Welcome, {user?.username || "User"}
+        </Typography>
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          You must complete your profile before you can {role === "carrier" ? "bid on loads" : "post a load"}.
+        </Alert>
+        <Typography sx={{ mt: 2 }}>Please ensure the following fields are filled out:</Typography>
+        <List>
           {role === "carrier" && (
             <>
-              {!profile.company_name && <li>Company Name</li>}
-              {!profile.policy_id && <li>Policy ID</li>}
-              {!profile.license_id && <li>License ID</li>}
-              {!profile.equipment_type && <li>Equipment Type</li>}
+              {!profile.company_name && <ListItem><ListItemText primary="Company Name" /></ListItem>}
+              {!profile.policy_id && <ListItem><ListItemText primary="Policy ID" /></ListItem>}
+              {!profile.license_id && <ListItem><ListItemText primary="License ID" /></ListItem>}
+              {!profile.equipment_type && <ListItem><ListItemText primary="Equipment Type" /></ListItem>}
             </>
           )}
           {role === "broker" && (
             <>
-              {!profile.company_name && <li>Company Name</li>}
-              {!profile.policy_id && <li>Insurance Policy Number</li>}
-              {!profile.authority_id && <li>Authority ID</li>}
+              {!profile.company_name && <ListItem><ListItemText primary="Company Name" /></ListItem>}
+              {!profile.policy_id && <ListItem><ListItemText primary="Insurance Policy Number" /></ListItem>}
+              {!profile.authority_id && <ListItem><ListItemText primary="Authority ID" /></ListItem>}
             </>
           )}
-        </ul>
-      </div>
+        </List>
+      </Container>
     );
   }
 
   return (
-    <div className="profile-page">
-      <h1>Welcome, {user?.username || "User"}</h1>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Welcome, {user?.username || "User"}
+      </Typography>
 
-      <p>Company Name: {profile.company_name}</p>
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Company Name:</Typography>
+        <Typography>{profile.company_name}</Typography>
 
-      {role === "carrier" && (
-        <>
-          <p>Policy ID: {profile.policy_id}</p>
-          <p>License ID: {profile.license_id}</p>
-          <p>Equipment Type: {profile.equipment_type}</p>
-          <h2>My Current Loads (Won Bids)</h2>
-          {wonBids.length > 0 ? (
-            <ul>
-              {wonBids.map((bid) => (
-                <li key={bid.id}>
-                  Load #{bid.load.id}: {bid.load.pickup_city} → {bid.load.delivery_city} | ${bid.load.rate}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>You have no current loads.</p>
-          )}
-        </>
-      )}
+        {role === "carrier" && (
+          <>
+            <Typography variant="h6" sx={{ mt: 2 }}>Policy ID:</Typography>
+            <Typography>{profile.policy_id}</Typography>
 
-      {role === "broker" && (
-        <>
-          <p>Insurance Policy Number: {profile.policy_id}</p>
-          <p>Authority ID: {profile.authority_id}</p>
-        </>
-      )}
-    </div>
+            <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
+            <Typography>{profile.license_id}</Typography>
+
+            <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
+            <Typography>{profile.equipment_type}</Typography>
+
+            <Typography variant="h5" sx={{ mt: 4 }}>My Current Loads (Won Bids)</Typography>
+            {wonBids.length > 0 ? (
+              <List>
+                {wonBids.map((bid) => (
+                  <ListItem key={bid.id} divider>
+                    <ListItemText
+                      primary={`Load #${bid.load.id}`}
+                      secondary={`${bid.load.pickup_city} → ${bid.load.delivery_city} | $${bid.load.rate}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography>You have no current loads.</Typography>
+            )}
+          </>
+        )}
+
+        {role === "broker" && (
+          <>
+            <Typography variant="h6" sx={{ mt: 2 }}>Insurance Policy Number:</Typography>
+            <Typography>{profile.policy_id}</Typography>
+
+            <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
+            <Typography>{profile.authority_id}</Typography>
+          </>
+        )}
+      </Box>
+    </Container>
   );
 }
 
