@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import './LoadCard.css';
 
-const LoadCard = ({ load }) => {
+const LoadCard = ({ load, user }) => {
   return (
     <div className="load-card">
       <Link to={`/loads/${load.id}`} className="load-card-link">
