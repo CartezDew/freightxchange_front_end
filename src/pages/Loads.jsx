@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import LoadCard from '../components/LoadCard.jsx';
 import { getLoads } from '../services/loads';
+
 import { Container, Grid, Typography } from '@mui/material';
+
+import Nav from '../components/Nav.jsx';
+import '../components/LoadList.css';
+
 
 const Loads = () => {
   const [loads, setLoads] = useState([]);
