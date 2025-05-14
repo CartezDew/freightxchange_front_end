@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { signOut } from "../services/users"; // make sure this is imported
-import './Nav.css';
+
+import { signOut } from "../services/users";
+import './Nav.css'
+
 
 function Nav({ user }) {
   const navigate = useNavigate();

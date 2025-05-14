@@ -1,7 +1,30 @@
 import { Link } from 'react-router-dom';
 import './LoadCard.css';
+import { createOffer } from '../services/offers';
 
-const LoadCard = ({ load, user }) => {
+
+const LoadCard = ({ load }) => {
+  const handleBid = async () => {
+    const amount = prompt("Enter your bid amount:");
+
+    if (!amount) return; 
+
+    try {
+      const offerData = {
+        load: load.id,
+        amount: parseFloat(amount)
+      };
+
+      const response = await createOffer(offerData);
+      alert("Your offer was submitted!");
+      console.log("Created offer:", response);
+    } catch (error) {
+      console.error("Failed to create offer:", error.response?.data || error.message);
+      alert("Something went wrong submitting your bid.");
+    }
+  };
+
+
   return (
     <div className="load-card">
       <Link to={`/loads/${load.id}`} className="load-card-link">
@@ -13,7 +36,7 @@ const LoadCard = ({ load, user }) => {
         <h2>Commodity: {load.commodity}</h2>
         <h2>Delivery Date: {load.deliveryDate}</h2>
       </Link>
-      <button className="bid-button" onClick={() => alert('Bid feature coming soon!')}>
+      <button className="bid-button" onClick={handleBid}>
           Bid
       </button>
     </div>
