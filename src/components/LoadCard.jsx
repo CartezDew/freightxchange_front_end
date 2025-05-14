@@ -4,6 +4,9 @@ import './LoadCard.css';
 import { createOffer } from '../services/offers';
 
 const LoadCard = ({ load }) => {
+  const role = localStorage.getItem('role'); // 'carrier' or 'broker'
+
+  // Modal + bid state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState('');
   const [modalStage, setModalStage] = useState('input'); // 'input' | 'success' | 'error'
@@ -23,7 +26,11 @@ const LoadCard = ({ load }) => {
   };
 
   const handleSubmitBid = async () => {
-    if (!bidAmount) return;
+    if (!bidAmount || isNaN(bidAmount)) {
+      setModalStage('error');
+      setModalMessage('Please enter a valid number.');
+      return;
+    }
 
     try {
       const offerData = {
@@ -32,13 +39,10 @@ const LoadCard = ({ load }) => {
       };
 
       const response = await createOffer(offerData);
-
-      // Show success message in modal
       setModalStage('success');
       setModalMessage("Your offer was submitted!");
       console.log("Created offer:", response);
     } catch (error) {
-      // Show error message in modal
       setModalStage('error');
       setModalMessage(
         error.response?.data?.error || "Something went wrong submitting your bid."
@@ -59,9 +63,12 @@ const LoadCard = ({ load }) => {
           <h2>Commodity: {load.commodity}</h2>
           <h2>Delivery Date: {load.deliveryDate}</h2>
         </Link>
-        <button className="bid-button" onClick={openModal}>
-          Bid
-        </button>
+
+        {role === 'carrier' && (
+          <button className="bid-button" onClick={openModal}>
+            Bid
+          </button>
+        )}
       </div>
 
       {isModalOpen && (
