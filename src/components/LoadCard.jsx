@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import './LoadCard.css';
 import { createOffer } from '../services/offers';
 
+
 const LoadCard = ({ load }) => {
   const handleBid = async () => {
     const amount = prompt("Enter your bid amount:");
@@ -22,6 +23,7 @@ const LoadCard = ({ load }) => {
       alert("Something went wrong submitting your bid.");
     }
   };
+
 
   return (
     <div className="load-card">
