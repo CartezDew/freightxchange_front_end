@@ -1,9 +1,6 @@
 import api from './apiConfig';
 
 
-
-
-
 // Get all loads
 
 export const getLoads = async () => {
