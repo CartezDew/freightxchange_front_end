@@ -3,7 +3,9 @@ import { signOut } from "../services/users"; // make sure this is imported
 import './Nav.css';
 
 function Nav({ user }) {
+  console.log("Nav user:", user);
   const navigate = useNavigate();
+  
 
   const handleSignOut = () => {
     signOut();           // clear localStorage
@@ -38,10 +40,12 @@ function Nav({ user }) {
 
   return (
     <nav className={`nav ${user?.role === 'broker' ? 'broker' : 'carrier'}`}>
-      {user && <div className="link welcome">Welcome, {user.username}</div>}
-      <div className="nav-links">
-        {user ? authenticatedOptions : unauthenticatedOptions}
-      </div>
+      {user && (
+  <div className="link welcome">
+    Welcome, {user.username || user.user?.username || "User"}
+  </div>
+)}
+
     </nav>
   );
 }
