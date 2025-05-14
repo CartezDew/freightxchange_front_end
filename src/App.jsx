@@ -11,6 +11,7 @@ import Profile from './pages/Profile.jsx'
 import Loads from './pages/Loads.jsx'
 import LoadDetail from './pages/LoadDetail.jsx'
 // import NewLoad from './pages/NewLoad.jsx'
+
 // import EditLoad from './pages/EditLoad.jsx'
 // import Offers from './pages/Offers.jsx'
 import { Routes, Route } from 'react-router-dom'
@@ -29,6 +30,7 @@ function App() {
 
 
     return (
+<<<<<<< HEAD
          <ThemeProvider theme={theme}>
              <CssBaseline />
              <Nav user={user} />
@@ -47,6 +49,26 @@ function App() {
                 {/*<Route path="/offers/:offerId" element={<Offers />} />*/}
               </Routes>
         </ThemeProvider>
+=======
+        <>
+         <Nav user={user} />
+      <Routes>
+        <Route path="/" element={<Home setUser={setUser} />} />
+        <Route path="/register" element={<Register setUser={setUser} />} />
+        <Route path="/profile" element={<Profile/>} />
+        {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
+        <Route path="/loads" element={<Loads />} />
+        {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
+        {/*<Route path="/loads" element={<Loads />} />*/}
+        {/*<Route path="/loads/new" element={<NewLoad />} />*/}
+        {/*<Route path="/loads/:loadId/edit" element={<EditLoad />} />*/}
+
+        <Route path="/loads/:loadId" element={<LoadDetail />} />
+        {/*<Route path="/loads/:loadId/delete" element={<DeleteLoad />} />*/}
+        {/*<Route path="/offers/:offerId" element={<Offers />} />*/}
+      </Routes>
+        </>
+>>>>>>> 444efc7283da8389f57c8f29682c56d17cc857ea
     )
 }
 
