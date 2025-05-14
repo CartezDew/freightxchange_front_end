@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/apiConfig";
 import { useNavigate } from "react-router-dom";
 
-function Profile() {
+function Profile({user}) {
   const [profile, setProfile] = useState(null);
   const [role, setRole] = useState(null);
   const [error, setError] = useState(null);
@@ -78,7 +78,8 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      <h1>Welcome, {profile.user}</h1>
+      <h1>Welcome, {user?.username || "User"}</h1>
+
       <p>Company Name: {profile.company_name}</p>
 
       {role === "carrier" && (

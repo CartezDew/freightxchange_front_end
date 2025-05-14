@@ -16,24 +16,30 @@ export const signUp = async (credentials) => {
 export const signIn = async (credentials) => {
   try {
     const resp = await api.post("/login/", credentials);
-    const { access, refresh, role, profile_id } = resp.data;
+    const { access, refresh, role, profile_id, user } = resp.data;
 
-    if (!role || !profile_id) {
-      throw new Error("Login response missing role or profile_id");
+    if (!role || !profile_id || !user) {
+      throw new Error("Login response missing user, role or profile_id");
     }
 
     localStorage.setItem("access", access);
     localStorage.setItem("refresh", refresh);
     localStorage.setItem("role", role);
     localStorage.setItem("profileId", profile_id);
+    localStorage.setItem("username", user.username); // ✅ store username
 
-    const profileRes = await api.get(`/${role}-profiles/${profile_id}/`);
-    return profileRes.data;
+    return {
+      username: user.username,
+      role,
+      profile_id,
+      user
+    };
   } catch (error) {
     console.error("Login failed:", error);
     throw error;
   }
 };
+
 
 export const signOut = () => {
   localStorage.removeItem('access');
@@ -43,16 +49,25 @@ export const signOut = () => {
 };
 
 export const verifyUser = async () => {
+  const access = localStorage.getItem("access");
   const role = localStorage.getItem("role");
   const profileId = localStorage.getItem("profileId");
+  const username = localStorage.getItem("username"); // ✅ retrieve username
 
-  if (!role || !profileId) return false;
+  if (!access || !role || !profileId || !username) return false;
 
   try {
-    const res = await api.get(`/${role}-profiles/${profileId}/`);
-    return res.data;
+    const profileRes = await api.get(`/${role}-profiles/${profileId}/`);
+    
+
+    return {
+      username,
+      role,
+      profile_id: profileId,
+      user: { username }
+    };
   } catch (err) {
-    console.error(err);
+    console.error("verifyUser failed:", err);
     return false;
   }
 };

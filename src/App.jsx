@@ -62,7 +62,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home setUser={setUser} />} />
                 <Route path="/register" element={<Register setUser={setUser} />} />
-                <Route path="/profile" element={<Profile/>} />
+                <Route path="/profile" element={<Profile user={user} />} />
                 {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
                 <Route path="/loads" element={<Loads />} />
                 {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
