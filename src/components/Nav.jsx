@@ -1,18 +1,14 @@
 import { NavLink, useNavigate } from "react-router-dom";
-
 import { signOut } from "../services/users";
-import './Nav.css'
-
+import './Nav.css';
 
 function Nav({ user }) {
-  console.log("Nav user:", user);
   const navigate = useNavigate();
-  
 
   const handleSignOut = () => {
-    signOut();           // clear localStorage
-    navigate("/");       // redirect to home
-    window.location.reload(); // optional: force re-render App (reset user state)
+    signOut();                 // Clear localStorage
+    navigate("/");             // Redirect to home
+    window.location.reload();  // Optional: force App state reset
   };
 
   const authenticatedOptions = (
@@ -26,7 +22,7 @@ function Nav({ user }) {
       <NavLink className="nav-link" to="/loads/new">
         Add Load
       </NavLink>
-      <button className="nav-link" onClick={handleSignOut}>
+      <button className="nav-link signout-btn" onClick={handleSignOut}>
         Sign Out
       </button>
     </>
@@ -42,12 +38,16 @@ function Nav({ user }) {
 
   return (
     <nav className={`nav ${user?.role === 'broker' ? 'broker' : 'carrier'}`}>
-      {user && (
-  <div className="link welcome">
-    Welcome, {user.username || user.user?.username || "User"}
-  </div>
-)}
-
+      <div className="nav-header">
+        {user && (
+          <div className="link welcome">
+            Welcome, {user.username || user.user?.username || "User"}
+          </div>
+        )}
+      </div>
+      <div className="nav-links">
+        {user ? authenticatedOptions : unauthenticatedOptions}
+      </div>
     </nav>
   );
 }
