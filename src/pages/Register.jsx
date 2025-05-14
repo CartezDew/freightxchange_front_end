@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
@@ -120,5 +119,4 @@ function Register({ setUser }) {
 }
 
 export default Register;
-=======
->>>>>>> Stashed changes
+

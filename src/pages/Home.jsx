@@ -1,7 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { signIn } from "../services/users.js";
-// import "./Home.css";
+
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Link,
+} from "@mui/material";
 
 function Home({ setUser }) {
   const navigate = useNavigate();
@@ -28,7 +37,7 @@ function Home({ setUser }) {
     try {
       const userData = await signIn(form);
       setUser(userData);
-      navigate("/profile"); // or `/profile/${userData.id}` if needed
+      navigate("/profile");
     } catch (error) {
       console.error("Login failed:", error);
       setForm((prevForm) => ({
@@ -40,48 +49,58 @@ function Home({ setUser }) {
     }
   };
 
-  const renderError = () => {
-    return form.isError ? (
-      <p className="error-message">{form.errorMsg}</p>
-    ) : null;
-  };
-
   return (
-    <div className="home-container">
-      <div className="home-form-container">
-        <form className="home-form" onSubmit={handleSubmit}>
-          <h1>Login</h1>
+    <Container maxWidth="xs">
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          mt: 8,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom>
+          Login
+        </Typography>
 
-          <input
-            type="text"
-            name="username"
-            value={form.username}
-            placeholder="Enter Username"
-            onChange={handleChange}
-            required
-            autoComplete="off"
-          />
+        <TextField
+          label="Username"
+          name="username"
+          value={form.username}
+          onChange={handleChange}
+          fullWidth
+          required
+          autoComplete="off"
+        />
 
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            placeholder="Enter Password"
-            onChange={handleChange}
-            required
-            autoComplete="off"
-          />
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          value={form.password}
+          onChange={handleChange}
+          fullWidth
+          required
+          autoComplete="off"
+        />
 
-          {renderError()}
+        {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
 
-          <button type="submit">Log In</button>
+        <Button type="submit" variant="contained" fullWidth>
+          Log In
+        </Button>
 
-          <Link to="/register">
-            <p>No account? Sign up here!</p>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          No account?{" "}
+          <Link component={RouterLink} to="/register">
+            Sign up here!
           </Link>
-        </form>
-      </div>
-    </div>
+        </Typography>
+      </Box>
+    </Container>
   );
 }
 

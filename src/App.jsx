@@ -33,7 +33,6 @@ function App() {
 
 
     return (
-<<<<<<< HEAD
          <ThemeProvider theme={theme}>
              <CssBaseline />
              <Nav user={user} />
@@ -45,34 +44,13 @@ function App() {
                 <Route path="/loads" element={<Loads />} />
                 {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
                 {/*<Route path="/loads" element={<Loads />} />*/}
-                {/*<Route path="/loads/new" element={<NewLoad />} />*/}
+                <Route path="/loads/new" element={<NewLoad />} />
                 {/*<Route path="/loads/:loadId/edit" element={<EditLoad />} />*/}
                 <Route path="/loads/:loadId" element={<LoadDetail />} />
                 {/*<Route path="/loads/:loadId/delete" element={<DeleteLoad />} />*/}
                 {/*<Route path="/offers/:offerId" element={<Offers />} />*/}
               </Routes>
         </ThemeProvider>
-=======
-        <>
-         <Nav user={user} />
-      <Routes>
-        <Route path="/" element={<Home setUser={setUser} />} />
-        <Route path="/register" element={<Register setUser={setUser} />} />
-        <Route path="/profile" element={<Profile/>} />
-        {/* <Route path="/logout" element={<LogOut setUser={setUser} />} /> */}
-        <Route path="/loads" element={<Loads />} />
-
-        {/*<Route path="/logout" element={<LogOut setUser={setUser} />} />*/}
-        <Route path="/loads" element={<Loads />} />
-        <Route path="/loads/new" element={<NewLoad />} />
-        {/*<Route path="/loads/:loadId/edit" element={<EditLoad />} />*/}
-
-        <Route path="/loads/:loadId" element={<LoadDetail />} />
-        {/* <Route path="/loads/:loadId/delete" element={<DeleteLoad />} /> */}
-        <Route path="/offers/:offerId" element={<Offers />} />
-      </Routes>
-        </>
->>>>>>> 444efc7283da8389f57c8f29682c56d17cc857ea
     )
 }
 

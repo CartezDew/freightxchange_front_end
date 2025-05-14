@@ -2,17 +2,21 @@ import { Link } from 'react-router-dom';
 import './LoadCard.css';
 import { createOffer } from '../services/offers';
 
-
 const LoadCard = ({ load }) => {
+  const role = localStorage.getItem('role'); // 'carrier' or 'broker'
+
   const handleBid = async () => {
     const amount = prompt("Enter your bid amount:");
 
-    if (!amount) return; 
+    if (!amount || isNaN(amount)) {
+      alert("Please enter a valid number.");
+      return;
+    }
 
     try {
       const offerData = {
         load: load.id,
-        amount: parseFloat(amount)
+        amount: parseFloat(amount),
       };
 
       const response = await createOffer(offerData);
@@ -23,7 +27,6 @@ const LoadCard = ({ load }) => {
       alert("Something went wrong submitting your bid.");
     }
   };
-
 
   return (
     <div className="load-card">
@@ -36,11 +39,15 @@ const LoadCard = ({ load }) => {
         <h2>Commodity: {load.commodity}</h2>
         <h2>Delivery Date: {load.deliveryDate}</h2>
       </Link>
-      <button className="bid-button" onClick={handleBid}>
+
+      {/* Show Bid button only if user is a carrier */}
+      {role === 'carrier' && (
+        <button className="bid-button" onClick={handleBid}>
           Bid
-      </button>
+        </button>
+      )}
     </div>
   );
 };
 
-export default LoadCard; 
+export default LoadCard;
