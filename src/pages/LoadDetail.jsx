@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getLoad, deleteLoad } from "../services/loads.js";
-import { updateOffer, deleteOffer } from "../services/offers.js"; // Make sure you have these in your offers.js service
+import { updateOffer, deleteOffer } from "../services/offers.js";
 
 function LoadDetail() {
   const { loadId } = useParams();
@@ -71,7 +71,7 @@ function LoadDetail() {
   return (
     <div className="load-detail-container">
       <h1>Load Detail</h1>
-      <p><strong>Company Name:</strong> {load.company_name}</p>
+      <p><strong>Broker Company Name:</strong> {load.company_name}</p>
       <p><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</p>
       <p><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</p>
       <p><strong>Pickup Date:</strong> {load.pickup_date ? new Date(load.pickup_date).toLocaleDateString() : "Not Provided"}</p>
@@ -100,7 +100,6 @@ function LoadDetail() {
                   <strong>Amount:</strong> ${offer.amount} <br />
                   <strong>Carrier:</strong> {offer.carrier_name} <br />
                   <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
-
                   {isCarrierOwner && (
                     <>
                       <button onClick={() => handleEdit(offer.id)}>Edit</button>
