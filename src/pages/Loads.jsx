@@ -44,14 +44,6 @@ const Loads = () => {
         Available Loads
       </Typography>
 
-
-      <Grid container spacing={3} justifyContent="center">
-        {loads.map((load) => (
-          <Grid item xs={12} sm={6} md={4} key={load.id}>
-            <LoadCard load={load} />
-          </Grid>
-        ))}
-
       <Box sx={{ mb: 4 }}>
         <TextField
           fullWidth
@@ -74,7 +66,6 @@ const Loads = () => {
             No loads found matching your search.
           </Typography>
         )}
-
       </Grid>
     </Container>
   );
