@@ -73,12 +73,15 @@ const LoadCard = ({ load }) => {
           to={`/loads/${load.id}`}
           sx={{ textDecoration: 'none', color: 'inherit' }}
         >
-          {/* Rate prominently displayed at the top */}
+          {/* Format rate with commas and two decimal places */}
           <Typography
             variant="h4"
             sx={{ fontWeight: 700, color: '#1a237e', mb: 2 }}
           >
-            ${load.rate}
+            ${Number(load.rate).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Typography>
 
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>

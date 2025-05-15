@@ -79,6 +79,11 @@ function LoadDetail() {
 
   if (!load) return <Typography>Loading load details...</Typography>;
 
+  const formattedRate = Number(load.rate).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
@@ -95,7 +100,7 @@ function LoadDetail() {
         <Typography><strong>Delivery Date:</strong> {new Date(load.delivery_date).toLocaleDateString()}</Typography>
         <Typography><strong>Required Equipment:</strong> {load.equipment_requirements}</Typography>
         <Typography><strong>Commodity:</strong> {load.commodity}</Typography>
-        <Typography><strong>Rate:</strong> ${load.rate}</Typography>
+        <Typography><strong>Rate:</strong> ${formattedRate}</Typography>
 
         {isOwner && (
           <Box mt={3} display="flex" justifyContent="space-between">
@@ -120,7 +125,10 @@ function LoadDetail() {
                 return (
                   <ListItem key={offer.id} divider alignItems="flex-start" sx={{ flexDirection: "column", alignItems: "flex-start" }}>
                     <ListItemText
-                      primary={`$${offer.amount} from ${offer.carrier_name}`}
+                      primary={`$${Number(offer.amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })} from ${offer.carrier_name}`}
                       secondary={`Submitted: ${new Date(offer.submitted_at).toLocaleDateString()}`}
                     />
                     {isCarrierOwner && (

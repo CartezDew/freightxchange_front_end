@@ -98,11 +98,15 @@ function Profile({ user }) {
       {offers.map((offer, index) => {
         const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
+        const formattedAmount = Number(offer.offer_amount || offer.amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
 
         return (
           <Paper key={offer.id} variant="outlined" sx={{ p: 2 }}>
             <Typography variant="h6" align="center" sx={{ mb: 1 }}>Bid {index + 1}</Typography>
-            <Typography><strong>Amount:</strong> ${offer.offer_amount || offer.amount}</Typography>
+            <Typography><strong>Amount:</strong> ${formattedAmount}</Typography>
             {showCarrier && <Typography><strong>Carrier:</strong> {carrierCompany}</Typography>}
             {showBroker && <Typography><strong>Broker:</strong> {brokerCompany}</Typography>}
             <Typography><strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
