@@ -58,7 +58,7 @@ export const verifyUser = async () => {
 
   try {
     const profileRes = await api.get(`/${role}-profiles/${profileId}/`);
-    
+    const profile = profileRes.data;
 
     return {
       username,
