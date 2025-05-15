@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
 import { signOut } from "../services/users";
-// import logo from "../assets/logotightcrop.png";
+import logo from "../assets/logotightcrop.png";
 import './Nav.css';
 
 function Nav({ user }) {
@@ -22,13 +22,12 @@ function Nav({ user }) {
           paddingY: '4px !important',
         }}
       >
-        {/* Logo + Welcome */}
         <Box display="flex" alignItems="center" gap={2}>
-          {/*<img*/}
-          {/*  src={logo}*/}
-          {/*  alt="FreightXchange logo"*/}
-          {/*  style={{ height: '32px', objectFit: 'contain', display: 'block' }}*/}
-          {/*/>*/}
+          <img
+          src={logo}
+          alt="FreightXchange logo"
+          style={{ height: '32px', objectFit: 'contain', display: 'block' }}
+          />
           {user && (
             <Typography variant="body1" sx={{ fontWeight: 500, color: '#5d4037' }}>
               Welcome, {user.username || user.user?.username || "User"}

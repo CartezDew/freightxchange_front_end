@@ -21,11 +21,11 @@ const Loads = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom align='center'>
         Available Loads
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} justifyContent="center">
         {loads.map((load) => (
           <Grid item xs={12} sm={6} md={4} key={load.id}>
             <LoadCard load={load} />

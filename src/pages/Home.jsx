@@ -59,7 +59,7 @@ function Home({ setUser }) {
         </Typography>
 
         <Box sx={{ mb: 4 }}>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom align="center">
             About Us
           </Typography>
           <Typography variant="body1" color="text.secondary">
