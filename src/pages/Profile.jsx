@@ -8,16 +8,34 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider,
   Alert,
+  TextField,
+  MenuItem,
+  Button,
+  Divider,
 } from "@mui/material";
+
+const EQUIPMENT_OPTIONS = [
+  "Box Truck", "Car Hauler", "Conestoga", "Container Chassis",
+  "Dry Van", "Dumptruck", "Flatbed", "Gooseneck", "Hotshot",
+  "Livestock Trailer", "Logging", "Lowboy", "Power Only",
+  "Reefer", "Step Deck", "Tanker", "Walking Floor"
+];
 
 function Profile({ user }) {
   const [profile, setProfile] = useState(null);
   const [role, setRole] = useState(null);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [wonBids, setWonBids] = useState([]);
+  const [submittedOffers, setSubmittedOffers] = useState([]);
+  const [receivedOffers, setReceivedOffers] = useState([]);
   const navigate = useNavigate();
+
+  const [companyName, setCompanyName] = useState("");
+  const [authorityId, setAuthorityId] = useState("");
+  const [licenseId, setLicenseId] = useState("");
+  const [equipmentType, setEquipmentType] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -36,10 +54,24 @@ function Profile({ user }) {
         const res = await api.get(`/${storedRole}-profiles/${profileId}/`);
         setProfile(res.data);
 
+        setCompanyName(res.data.company_name || "");
+        setAuthorityId(res.data.authority_id || "");
+        setLicenseId(res.data.license_id || "");
+        setEquipmentType(res.data.equipment_type || "");
+
         if (storedRole === "carrier") {
-          const bidRes = await api.get(`/offers/?status=awarded&carrier=${profileId}`);
-          setWonBids(bidRes.data);
+          const bids = await api.get(`/offers/?carrier=${profileId}`);
+          setSubmittedOffers(bids.data);
+
+          const awarded = bids.data.filter(b => b.status === "awarded");
+          setWonBids(awarded);
         }
+
+        if (storedRole === "broker") {
+          const offersRes = await api.get(`/offers/?broker=${profileId}`);
+          setReceivedOffers(offersRes.data);
+        }
+
       } catch (err) {
         console.error(err);
         setError("Could not load profile.");
@@ -49,100 +81,107 @@ function Profile({ user }) {
     fetchProfile();
   }, [navigate]);
 
-  if (error) {
-    return <Alert severity="error">{error}</Alert>;
-  }
+  const handleSave = async () => {
+    try {
+      const updatedFields = {
+        company_name: companyName,
+        authority_id: authorityId,
+        ...(role === "carrier" && { license_id: licenseId, equipment_type: equipmentType }),
+      };
 
-  if (!profile) {
-    return <Typography sx={{ m: 3 }}>Loading profile...</Typography>;
-  }
+      const profileId = localStorage.getItem("profileId");
+      await api.patch(`/${role}-profiles/${profileId}/`, updatedFields);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      setError("Failed to save profile updates.");
+    }
+  };
 
-  const isCarrierMissingInfo = role === "carrier" &&
-    (!profile.company_name || !profile.policy_id || !profile.license_id || !profile.equipment_type);
+  if (error) return <Alert severity="error">{error}</Alert>;
+  if (!profile) return <Typography sx={{ m: 3 }}>Loading profile...</Typography>;
 
-  const isBrokerMissingInfo = role === "broker" &&
-    (!profile.company_name || !profile.policy_id || !profile.authority_id);
-
-  if (isCarrierMissingInfo || isBrokerMissingInfo) {
-    return (
-      <Container maxWidth="sm">
-        <Typography variant="h5" sx={{ mt: 4 }}>
-          Welcome, {user?.username || "User"}
-        </Typography>
-        <Alert severity="warning" sx={{ mt: 2 }}>
-          You must complete your profile before you can {role === "carrier" ? "bid on loads" : "post a load"}.
-        </Alert>
-        <Typography sx={{ mt: 2 }}>Please ensure the following fields are filled out:</Typography>
-        <List>
-          {role === "carrier" && (
-            <>
-              {!profile.company_name && <ListItem><ListItemText primary="Company Name" /></ListItem>}
-              {!profile.policy_id && <ListItem><ListItemText primary="Policy ID" /></ListItem>}
-              {!profile.license_id && <ListItem><ListItemText primary="License ID" /></ListItem>}
-              {!profile.equipment_type && <ListItem><ListItemText primary="Equipment Type" /></ListItem>}
-            </>
-          )}
-          {role === "broker" && (
-            <>
-              {!profile.company_name && <ListItem><ListItemText primary="Company Name" /></ListItem>}
-              {!profile.policy_id && <ListItem><ListItemText primary="Insurance Policy Number" /></ListItem>}
-              {!profile.authority_id && <ListItem><ListItemText primary="Authority ID" /></ListItem>}
-            </>
-          )}
-        </List>
-      </Container>
+  const renderOffersList = (offers) =>
+    offers.length > 0 ? (
+      <List>
+        {offers.map((offer) =>
+          offer.load ? (
+            <ListItem key={offer.id} divider>
+              <ListItemText
+                primary={`Load #${offer.load.id}`}
+                secondary={`${offer.load.pickup_city} → ${offer.load.delivery_city} | $${offer.offer_amount}`}
+              />
+            </ListItem>
+          ) : null
+        )}
+      </List>
+    ) : (
+      <Typography sx={{ mb: 2 }}>No offers to display.</Typography>
     );
-  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Welcome, {user?.username || "User"}
-      </Typography>
-
-      <Box sx={{ mt: 2 }}>
-        <Typography variant="h6">Company Name:</Typography>
-        <Typography>{profile.company_name}</Typography>
-
-        {role === "carrier" && (
-          <>
-            <Typography variant="h6" sx={{ mt: 2 }}>Policy ID:</Typography>
-            <Typography>{profile.policy_id}</Typography>
-
-            <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
-            <Typography>{profile.license_id}</Typography>
-
-            <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
-            <Typography>{profile.equipment_type}</Typography>
-
-            <Typography variant="h5" sx={{ mt: 4 }}>My Current Loads (Won Bids)</Typography>
-            {wonBids.length > 0 ? (
-              <List>
-                {wonBids.map((bid) => (
-                  <ListItem key={bid.id} divider>
-                    <ListItemText
-                      primary={`Load #${bid.load.id}`}
-                      secondary={`${bid.load.pickup_city} → ${bid.load.delivery_city} | $${bid.load.rate}`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <Typography>You have no current loads.</Typography>
-            )}
-          </>
-        )}
-
-        {role === "broker" && (
-          <>
-            <Typography variant="h6" sx={{ mt: 2 }}>Insurance Policy Number:</Typography>
-            <Typography>{profile.policy_id}</Typography>
-
-            <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
-            <Typography>{profile.authority_id}</Typography>
-          </>
-        )}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Button variant="outlined" onClick={() => setIsEditing(!isEditing)}>
+          {isEditing ? "Cancel" : "Edit Profile"}
+        </Button>
       </Box>
+
+      {isEditing ? (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <TextField label="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
+          <TextField label="Authority ID" value={authorityId} onChange={(e) => setAuthorityId(e.target.value)} required />
+          {role === "carrier" && (
+            <>
+              <TextField label="License ID" value={licenseId} onChange={(e) => setLicenseId(e.target.value)} required />
+              <TextField
+                select
+                label="Equipment Type"
+                value={equipmentType}
+                onChange={(e) => setEquipmentType(e.target.value)}
+                required
+              >
+                {EQUIPMENT_OPTIONS.map((option) => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
+              </TextField>
+            </>
+          )}
+          <Button variant="contained" color="primary" onClick={handleSave}>Save Profile</Button>
+        </Box>
+      ) : (
+        <Box>
+          <Typography variant="h6">Company Name:</Typography>
+          <Typography>{profile.company_name}</Typography>
+          <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
+          <Typography>{profile.authority_id}</Typography>
+          {role === "carrier" && (
+            <>
+              <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
+              <Typography>{profile.license_id}</Typography>
+              <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
+              <Typography>{profile.equipment_type}</Typography>
+            </>
+          )}
+        </Box>
+      )}
+
+      {role === "carrier" && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5">My Submitted Offers</Typography>
+          {renderOffersList(submittedOffers)}
+          <Divider sx={{ my: 4 }} />
+          <Typography variant="h5">My Won Bids</Typography>
+          {renderOffersList(wonBids)}
+        </Box>
+      )}
+
+      {role === "broker" && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5">Offers Received</Typography>
+          {renderOffersList(receivedOffers)}
+        </Box>
+      )}
     </Container>
   );
 }
