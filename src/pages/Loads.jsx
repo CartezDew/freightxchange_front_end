@@ -46,11 +46,30 @@ const Loads = () => {
 
       <Box sx={{ mb: 4 }}>
         <TextField
-          fullWidth
           label="Search Loads (e.g. Atlanta, Dry Van, UberFreight)"
           variant="outlined"
+          fullWidth
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          sx={{
+            '& label': {
+              color: '#5D3A00', 
+            },
+            '& label.Mui-focused': {
+              color: '#5D3A00', 
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#5D3A00', 
+              },
+              '&:hover fieldset': {
+                borderColor: '#5D3A00', 
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#5D3A00', 
+              },
+            },
+          }}
         />
       </Box>
 
@@ -72,3 +91,4 @@ const Loads = () => {
 };
 
 export default Loads;
+
