@@ -60,46 +60,6 @@ function Home({ setUser }) {
             Built for carriers. Backed by brokers.
           </Typography>
 
-
-          <TextField
-            label="Username"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            fullWidth
-            required
-            autoComplete="off"
-            sx={{
-              '& label': { color: '#5D3A00' },
-              '& label.Mui-focused': { color: '#5D3A00' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: '#5D3A00' },
-                '&:hover fieldset': { borderColor: '#5D3A00' },
-                '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
-
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            fullWidth
-            required
-            autoComplete="off"
-            sx={{
-              '& label': { color: '#5D3A00' },
-              '& label.Mui-focused': { color: '#5D3A00' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: '#5D3A00' },
-                '&:hover fieldset': { borderColor: '#5D3A00' },
-                '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
-
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5" gutterBottom align="center">
               About Us
@@ -110,7 +70,6 @@ function Home({ setUser }) {
               brokers to build trust through better tools — not middlemen.
             </Typography>
           </Box>
-
 
           <Divider sx={{ my: 4 }} />
 
@@ -128,20 +87,6 @@ function Home({ setUser }) {
               Login
             </Typography>
 
-
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            No account?{" "}
-            <Link
-              component={RouterLink}
-              to="/register"
-              sx={{ color: '#191970', textDecoration: 'underline', fontWeight: 'bold' }}
-            >
-              Sign up here!
-            </Link>
-          </Typography>
-        </Box>
-      </Paper>
-
             <TextField
               label="Username"
               name="username"
@@ -150,6 +95,15 @@ function Home({ setUser }) {
               fullWidth
               required
               autoComplete="off"
+              sx={{
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
             />
 
             <TextField
@@ -161,6 +115,15 @@ function Home({ setUser }) {
               fullWidth
               required
               autoComplete="off"
+              sx={{
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
             />
 
             {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
@@ -182,7 +145,11 @@ function Home({ setUser }) {
 
             <Typography variant="body2" sx={{ mt: 2 }}>
               No account?{" "}
-              <Link component={RouterLink} to="/register">
+              <Link
+                component={RouterLink}
+                to="/register"
+                sx={{ color: '#191970', textDecoration: 'underline', fontWeight: 'bold' }}
+              >
                 Sign up here!
               </Link>
             </Typography>
@@ -190,7 +157,6 @@ function Home({ setUser }) {
         </Paper>
       </Container>
 
-      {/* Clean, minimal joke banner */}
       <Box
         sx={{
           position: "fixed",
@@ -207,6 +173,7 @@ function Home({ setUser }) {
       >
         <JokeDisplay />
       </Box>
+    </>
   );
 }
 

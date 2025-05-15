@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // ✅ include useEffect
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
 import {
@@ -20,12 +20,12 @@ function Register({ setUser }) {
     isError: false,
     errorMsg: "",
   });
-}
+
   // ✅ Redirect logged-in users
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (access) {
-      navigate("/profile"); // or any other route you prefer
+      navigate("/profile");
     }
   }, [navigate]);
 
@@ -83,12 +83,12 @@ function Register({ setUser }) {
           onChange={handleChange}
           required
           sx={{
-          '& label': { color: '#5D3A00' },
-          '& label.Mui-focused': { color: '#5D3A00' },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': { borderColor: '#5D3A00' },
-            '&:hover fieldset': { borderColor: '#5D3A00' },
-            '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+            '& label': { color: '#5D3A00' },
+            '& label.Mui-focused': { color: '#5D3A00' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#5D3A00' },
+              '&:hover fieldset': { borderColor: '#5D3A00' },
+              '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
             },
           }}
         />
@@ -108,9 +108,9 @@ function Register({ setUser }) {
               '& fieldset': { borderColor: '#5D3A00' },
               '&:hover fieldset': { borderColor: '#5D3A00' },
               '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
+            },
+          }}
+        />
 
         <TextField
           fullWidth
@@ -127,10 +127,10 @@ function Register({ setUser }) {
               '& fieldset': { borderColor: '#5D3A00' },
               '&:hover fieldset': { borderColor: '#5D3A00' },
               '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
-          
+            },
+          }}
+        />
+
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Typography fontWeight="bold">Role:</Typography>
           <Button
@@ -169,8 +169,6 @@ function Register({ setUser }) {
       </Box>
     </Container>
   );
-
+}
 
 export default Register;
-
-

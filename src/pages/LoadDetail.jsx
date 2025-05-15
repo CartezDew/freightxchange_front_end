@@ -12,6 +12,13 @@ import {
   List,
   ListItem,
   ListItemText,
+  Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Alert as MuiAlert,
 } from "@mui/material";
 
 function LoadDetail() {
@@ -19,6 +26,23 @@ function LoadDetail() {
   const navigate = useNavigate();
   const [load, setLoad] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const [editingOffer, setEditingOffer] = useState(null);
+  const [editAmount, setEditAmount] = useState("");
+
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   useEffect(() => {
     const fetchLoad = async () => {
@@ -35,6 +59,7 @@ function LoadDetail() {
         }
       } catch (error) {
         console.error("Failed to fetch load:", error);
+        showSnackbar("Failed to load details.", "error");
       }
     };
 
@@ -44,36 +69,47 @@ function LoadDetail() {
   const handleDeleteLoad = async () => {
     try {
       await deleteLoad(loadId);
-      navigate("/loads");
+      showSnackbar("Load deleted", "success");
+      setTimeout(() => navigate("/loads"), 1200);
     } catch (error) {
       console.error("Failed to delete load:", error);
+      showSnackbar("Failed to delete load", "error");
     }
   };
 
-  const handleEdit = async (offerId) => {
-    const newAmount = prompt("Enter new bid amount:");
-    if (!newAmount || isNaN(newAmount)) return alert("Invalid amount");
+  const openEditModal = (offer) => {
+    setEditingOffer(offer);
+    setEditAmount(offer.amount);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editAmount || isNaN(editAmount)) {
+      showSnackbar("Invalid amount entered", "error");
+      return;
+    }
 
     try {
-      await updateOffer(offerId, { amount: parseFloat(newAmount) });
-      alert("Offer updated!");
-      window.location.reload();
+      await updateOffer(editingOffer.id, { amount: parseFloat(editAmount) });
+      showSnackbar("Offer updated!", "success");
+      setEditingOffer(null);
+      setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
-      console.error("Edit failed", err);
-      alert("Failed to update offer.");
+      console.error("Update failed", err);
+      showSnackbar("Failed to update offer.", "error");
     }
   };
 
   const handleDelete = async (offerId) => {
-    if (!window.confirm("Are you sure you want to delete this offer?")) return;
+    const confirmed = window.confirm("Are you sure you want to delete this offer?");
+    if (!confirmed) return;
 
     try {
       await deleteOffer(offerId);
-      alert("Offer deleted!");
-      window.location.reload();
+      showSnackbar("Offer deleted!", "success");
+      setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
       console.error("Delete failed", err);
-      alert("Failed to delete offer.");
+      showSnackbar("Failed to delete offer.", "error");
     }
   };
 
@@ -123,7 +159,12 @@ function LoadDetail() {
               {load.offers.map((offer) => {
                 const isCarrierOwner = localStorage.getItem("profileId") === String(offer.carrier);
                 return (
-                  <ListItem key={offer.id} divider alignItems="flex-start" sx={{ flexDirection: "column", alignItems: "flex-start" }}>
+                  <ListItem
+                    key={offer.id}
+                    divider
+                    alignItems="flex-start"
+                    sx={{ flexDirection: "column", alignItems: "flex-start" }}
+                  >
                     <ListItemText
                       primary={`$${Number(offer.amount).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
@@ -133,7 +174,7 @@ function LoadDetail() {
                     />
                     {isCarrierOwner && (
                       <Box mt={1}>
-                        <Button onClick={() => handleEdit(offer.id)} size="small" variant="outlined" sx={{ mr: 1 }}>
+                        <Button onClick={() => openEditModal(offer)} size="small" variant="outlined" sx={{ mr: 1 }}>
                           Edit
                         </Button>
                         <Button onClick={() => handleDelete(offer.id)} size="small" variant="contained" color="error">
@@ -148,6 +189,45 @@ function LoadDetail() {
           </Box>
         )}
       </Paper>
+
+      {/* Snackbar for feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+          elevation={6}
+          variant="filled"
+        >
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
+
+      {/* Dialog for editing offer */}
+      <Dialog open={!!editingOffer} onClose={() => setEditingOffer(null)}>
+        <DialogTitle>Edit Bid</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="New Bid Amount"
+            type="number"
+            fullWidth
+            value={editAmount}
+            onChange={(e) => setEditAmount(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditingOffer(null)}>Cancel</Button>
+          <Button onClick={handleSaveEdit} variant="contained">Save</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
