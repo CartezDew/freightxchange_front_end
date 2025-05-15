@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLoad, updateLoad } from "../services/loads.js";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  MenuItem
+} from "@mui/material";
 
 function EditLoad() {
   const navigate = useNavigate();
@@ -50,77 +58,102 @@ function EditLoad() {
   };
 
   return (
-    <div className="edit-load-root">
-      <h2>Edit Load</h2>
-      <form className="edit-load-form" onSubmit={handleSubmit}>
-        <input
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Edit Load
+      </Typography>
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
           name="pickup_city"
-          placeholder="Pickup City"
+          label="Pickup City"
           value={load.pickup_city}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
           name="pickup_state"
-          placeholder="Pickup State"
+          label="Pickup State"
           value={load.pickup_state}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
           name="delivery_city"
-          placeholder="Delivery City"
+          label="Delivery City"
           value={load.delivery_city}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
           name="delivery_state"
-          placeholder="Delivery State"
+          label="Delivery State"
           value={load.delivery_state}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
           name="rate"
-          placeholder="Rate"
+          label="Rate"
+          type="number"
           value={load.rate}
           onChange={handleChange}
           required
         />
-        <input
-          name="equipment_requirements"
-          placeholder="Equipment Requirements"
-          value={load.equipment_requirements}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="date"
+        <TextField
+        name="equipment_requirements"
+        label="Equipment Requirements"
+        value={load.equipment_requirements}
+        onChange={handleChange}
+        select
+        required
+      >
+        {[
+          "Box Truck", "Car Hauler", "Conestoga", "Container Chassis",
+          "Dry Van", "Dumptruck", "Flatbed", "Gooseneck", "Hotshot",
+          "Livestock Trailer", "Logging", "Lowboy", "Power Only",
+          "Reefer", "Step Deck", "Tanker", "Walking Floor"
+        ].map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+        <TextField
           name="pickup_date"
-          placeholder="Pickup Date"
+          label="Pickup Date"
+          type="date"
           value={load.pickup_date}
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
           required
         />
-        <input
-          type="date"
+        <TextField
           name="delivery_date"
-          placeholder="Delivery Date"
+          label="Delivery Date"
+          type="date"
           value={load.delivery_date}
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
           required
         />
-        <input
+        <TextField
           name="commodity"
-          placeholder="Commodity"
+          label="Commodity"
           value={load.commodity}
           onChange={handleChange}
           required
         />
-        <button type="submit">Update Load</button>
-      </form>
-    </div>
+
+        <Button type="submit" variant="contained">
+          Update Load
+        </Button>
+      </Box>
+    </Container>
   );
 }
 
