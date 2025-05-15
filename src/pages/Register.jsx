@@ -20,7 +20,7 @@ function Register({ setUser }) {
     isError: false,
     errorMsg: "",
   });
-}
+
   // ✅ Redirect logged-in users
   useEffect(() => {
     const access = localStorage.getItem("access");
@@ -166,11 +166,10 @@ function Register({ setUser }) {
         >
           {form.isError ? form.errorMsg : "Register"}
         </Button>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
   );
-
+}
 
 export default Register;
-
 
