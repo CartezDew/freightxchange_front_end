@@ -14,7 +14,6 @@ import {
   ListItemText,
 } from "@mui/material";
 
-
 function LoadDetail() {
   const { loadId } = useParams();
   const navigate = useNavigate();
@@ -81,50 +80,6 @@ function LoadDetail() {
   if (!load) return <Typography>Loading load details...</Typography>;
 
   return (
-    <div className="load-detail-container">
-      <h1>Load Detail</h1>
-      <p><strong>Broker Company Name:</strong> {load.company_name}</p>
-      <p><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</p>
-      <p><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</p>
-      <p><strong>Pickup Date:</strong> {load.pickup_date ? new Date(load.pickup_date).toLocaleDateString() : "Not Provided"}</p>
-      <p><strong>Delivery Date:</strong> {load.delivery_date ? new Date(load.delivery_date).toLocaleDateString() : "Not Provided"}</p>
-      <p><strong>Equipment Requirements:</strong> {load.equipment_requirements}</p>
-      <p><strong>Commodity:</strong> {load.commodity}</p>
-      <p><strong>Rate:</strong> ${load.rate}</p>
-
-      {isOwner && (
-        <div className="button-group">
-          <Link to={`/loads/${loadId}/edit`}>
-            <button>Edit Load</button>
-          </Link>
-          <button onClick={handleDeleteLoad}>Delete Load</button>
-        </div>
-      )}
-
-      {load.offers && load.offers.length > 0 && (
-        <div className="bids-section">
-          <h2>Submitted Bids</h2>
-          <ul>
-            {load.offers.map((offer) => {
-              const isCarrierOwner = localStorage.getItem("profileId") === String(offer.carrier);
-              return (
-                <li key={offer.id}>
-                  <strong>Amount:</strong> ${offer.amount} <br />
-                  <strong>Carrier:</strong> {offer.carrier_name} <br />
-                  <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
-                  {isCarrierOwner && (
-                    <>
-                      <button onClick={() => handleEdit(offer.id)}>Edit</button>
-                      <button onClick={() => handleDelete(offer.id)}>Delete</button>
-                    </>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-    </div>
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
         <Typography variant="h4" gutterBottom>
@@ -133,7 +88,7 @@ function LoadDetail() {
 
         <Divider sx={{ mb: 2 }} />
 
-        <Typography><strong>Company Name:</strong> {load.company_name}</Typography>
+        <Typography><strong>Broker Company Name:</strong> {load.company_name}</Typography>
         <Typography><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</Typography>
         <Typography><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</Typography>
         <Typography><strong>Pickup Date:</strong> {new Date(load.pickup_date).toLocaleDateString()}</Typography>
