@@ -2,9 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LoadCard.css';
 import { createOffer } from '../services/offers';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+} from '@mui/material';
 
 const LoadCard = ({ load }) => {
-  const role = localStorage.getItem('role'); // 'carrier' or 'broker'
+  const role = localStorage.getItem("role");
 
   // Modal + bid state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,19 +60,56 @@ const LoadCard = ({ load }) => {
 
   return (
     <>
-      <div className="load-card">
-        <Link to={`/loads/${load.id}`} className="load-card-link">
-          <h1>{load.company_name}</h1>
-          <h2>Pick-up Location: {load.pickupCity}, {load.pickupState}</h2>
-          <h2>Rate: {load.rate}</h2>
+      <Card
+        sx={{
+          width: 300,
+          m: 2,
+          p: 1,
+          borderRadius: 2,
+          boxShadow: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <CardContent component={Link} to={`/loads/${load.id}`} sx={{ textDecoration: 'none' }}>
+          <Typography variant="h6" sx={{ color: '#5d4037' }} gutterBottom>
+            {load.company_name}
+          </Typography>
 
-        </Link>
-        {role === 'carrier' && (
-          <button className="bid-button" onClick={openModal}>
-            Bid
-          </button>
+          <Typography variant="body2" sx={{ color: '#191970' }}>
+            <strong>Pick-up Location:</strong> {load.pickupCity}, {load.pickupState}
+          </Typography>
+
+          <Typography variant="body2" sx={{ color: '#191970' }}>
+            <strong>Rate:</strong> ${load.rate}
+          </Typography>
+        </CardContent>
+
+        {role?.toLowerCase() === 'carrier' && (
+          <Box sx={{ px: 2, pb: 2, pt: 1 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={openModal}
+              sx={{
+                backgroundColor: '#a0522d', 
+                color: 'white',
+                borderRadius: 2,
+                fontWeight: 600,
+                textTransform: 'none',
+                boxShadow: 2,
+                py: 1,
+                '&:hover': {
+                  backgroundColor: '#8b4513',
+                }
+              }}
+            >
+              Bid
+            </Button>
+          </Box>
         )}
-      </div>
+      </Card>
 
       {isModalOpen && (
         <div className="modal-overlay">
@@ -112,3 +156,5 @@ const LoadCard = ({ load }) => {
 };
 
 export default LoadCard;
+
+

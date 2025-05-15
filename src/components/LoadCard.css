@@ -20,7 +20,7 @@
   .bid-button {
     margin-top: 0.5rem;
     padding: 0.5rem;
-    background-color: #0066cc;
+    background-color: #a0522d;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -30,7 +30,7 @@
   }
   
   .bid-button:hover {
-    background-color: #004d99;
+    background-color: #8b4513;
   }
   
   /* LoadCard.css */

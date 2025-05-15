@@ -1,55 +1,67 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { signOut } from "../services/users";
+import { Link } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 import './Nav.css';
+import logo from '../assets/logotightcrop.png';
 
-function Nav({ user }) {
-  const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    signOut();                 // Clear localStorage
-    navigate("/");             // Redirect to home
-    window.location.reload();  // Optional: force App state reset
-  };
-
-  const authenticatedOptions = (
-    <>
-      <NavLink className="nav-link" to="/profile">
-        My Profile
-      </NavLink>
-      <NavLink className="nav-link" to="/loads">
-        Loads
-      </NavLink>
-      <NavLink className="nav-link" to="/loads/new">
-        Add Load
-      </NavLink>
-      <button className="nav-link signout-btn" onClick={handleSignOut}>
-        Sign Out
-      </button>
-    </>
-  );
-
-  const unauthenticatedOptions = (
-    <>
-      <NavLink className="nav-link" to="/register">
-        Register
-      </NavLink>
-    </>
-  );
-
+function NavBar({ user, handleSignOut }) {
   return (
-    <nav className={`nav ${user?.role === 'broker' ? 'broker' : 'carrier'}`}>
-      <div className="nav-header">
-        {user && (
-          <div className="link welcome">
-            Welcome, {user.username || user.user?.username || "User"}
-          </div>
-        )}
-      </div>
-      <div className="nav-links">
-        {user ? authenticatedOptions : unauthenticatedOptions}
-      </div>
-    </nav>
+    <AppBar position="static" sx={{ backgroundColor: '#fff8f0', boxShadow: 1 }}>
+      <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important', paddingY: '4px !important' }}>
+      <Box display="flex" alignItems="center" gap={1}>
+          <img
+            src={logo}
+            alt="FreightXchange logo"
+            style={{ height: '32px', width: 'auto', objectFit: 'contain', display: 'block' }}
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          {user && (
+            <>
+              <Button component={Link} to="/profile" sx={navLinkStyle}>
+                My Profile
+              </Button>
+              <Button component={Link} to="/loads" sx={navLinkStyle}>
+                Loads
+              </Button>
+              <Button component={Link} to="/loads/new" sx={navLinkStyle}>
+                Add Load
+              </Button>
+              <Button onClick={handleSignOut} sx={navButtonStyle}>
+                Sign Out
+              </Button>
+            </>
+          )}
+
+          {!user && (
+            <Button component={Link} to="/login" sx={navLinkStyle}>
+              Login
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 
-export default Nav;
+const navLinkStyle = {
+  color: '#5d4037',
+  fontWeight: 600,
+  textTransform: 'none',
+  '&:hover': {
+    color: '#8b4513',
+  },
+};
+
+const navButtonStyle = {
+  ...navLinkStyle,
+  backgroundColor: '#eee',
+  px: 2,
+  borderRadius: 1,
+  '&:hover': {
+    backgroundColor: '#ddd',
+  },
+};
+
+export default NavBar;
