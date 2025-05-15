@@ -56,13 +56,6 @@ function NewLoad() {
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         <TextField
-          label="Name"
-          name="name"
-          value={load.name}
-          onChange={handleChange}
-          required
-        />
-        <TextField
           label="Pickup City"
           name="pickup_city"
           value={load.pickup_city}

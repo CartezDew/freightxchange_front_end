@@ -7,58 +7,35 @@ import Nav from './components/Nav.jsx'
 import Home from './pages/Home.jsx'
 import Register from './pages/Register.jsx'
 import Profile from './pages/Profile.jsx'
-
-
 //import LogOut from './pages/LogOut.jsx'
 import Loads from './pages/Loads.jsx'
 import LoadDetail from './pages/LoadDetail.jsx'
 import NewLoad from './pages/NewLoad.jsx'
+//import EditLoad from './pages/EditLoad.jsx'
 import Offers from './pages/Offers.jsx'
 
 
+// import EditLoad from './pages/EditLoad.jsx'
 
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
 function App() {
-  const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await verifyUser();
-
-      if (userData) {
-        // Normalize username regardless of shape
-        let normalizedUser;
-
-        if (typeof userData.user === 'string') {
-          normalizedUser = {
-            ...userData,
-            username: userData.user
-          };
-        } else if (userData.user?.username) {
-          normalizedUser = {
-            ...userData,
-            username: userData.user.username
-          };
-        } else {
-          normalizedUser = userData; // fallback
-        }
-
-        setUser(normalizedUser);
-      } else {
-        setUser(null);
-      }
-    };
-
-    fetchUser();
-  }, []);
+    useEffect(() => {
+      const fetchUser = async () => {
+        const user = await verifyUser();
+        setUser(user || null);
+      };
+      fetchUser();
+    }, []);
 
 
     return (
          <ThemeProvider theme={theme}>
              <CssBaseline />
-             {user !== null && <Nav user={user} />}
+             <Nav user={user} />
               <Routes>
                 <Route path="/" element={<Home setUser={setUser} />} />
                 <Route path="/register" element={<Register setUser={setUser} />} />
@@ -74,8 +51,7 @@ function App() {
                 {/*<Route path="/offers/:offerId" element={<Offers />} />*/}
               </Routes>
         </ThemeProvider>
-
     )
 }
 
-export default App;
+export default App

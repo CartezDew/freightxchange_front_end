@@ -44,12 +44,13 @@ function LoadDetail() {
   return (
     <div className="load-detail-container">
       <h1>Load Detail</h1>
-      <p><strong>Pickup Location:</strong> {load.pickup_location}</p>
-      <p><strong>Delivery Location:</strong> {load.delivery_location}</p>
+      <p><strong>Company Name:</strong> {load.company_name}</p>
+      <p><strong>Pickup Location:</strong> {load.pickupCity}, {load.pickupState}</p>
+      <p><strong>Delivery Location:</strong> {load.deliveryCity}, {load.deliveryState}</p>
       <p><strong>Rate:</strong> ${load.rate}</p>
-      <p><strong>Equipment Requirements:</strong> {load.equipment_requirements}</p>
-      <p><strong>Pickup Date:</strong> {new Date(load.pickup_date).toLocaleDateString()}</p>
-      <p><strong>Location Date:</strong> {new Date(load.location_date).toLocaleDateString()}</p>
+      <p><strong>Equipment Requirements:</strong> {load.equipmentRequirements}</p>
+      <p><strong>Pickup Date:</strong> {load.pickupDate ? new Date(load.pickupDate).toLocaleDateString() : "Not Provided"}</p>
+      <p><strong>Delivery Date:</strong> {load.deliveryDate ? new Date(load.deliveryDate).toLocaleDateString() : "Not Provided"}</p>
       <p><strong>Commodity:</strong> {load.commodity}</p>
 
       {isOwner && (
