@@ -5,9 +5,6 @@ import {
   Container,
   Typography,
   Box,
-  List,
-  ListItem,
-  ListItemText,
   Alert,
   TextField,
   MenuItem,
@@ -59,17 +56,14 @@ function Profile({ user }) {
         setLicenseId(res.data.license_id || "");
         setEquipmentType(res.data.equipment_type || "");
 
+        const offersRes = await api.get(`/offers/?${storedRole}=${profileId}`);
+        const offers = offersRes.data.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+
         if (storedRole === "carrier") {
-          const bids = await api.get(`/offers/?carrier=${profileId}`);
-          setSubmittedOffers(bids.data);
-
-          const awarded = bids.data.filter(b => b.status === "awarded");
-          setWonBids(awarded);
-        }
-
-        if (storedRole === "broker") {
-          const offersRes = await api.get(`/offers/?broker=${profileId}`);
-          setReceivedOffers(offersRes.data);
+          setSubmittedOffers(offers);
+          setWonBids(offers.filter(o => o.status === "awarded"));
+        } else if (storedRole === "broker") {
+          setReceivedOffers(offers);
         }
 
       } catch (err) {
@@ -98,26 +92,27 @@ function Profile({ user }) {
     }
   };
 
+  const renderOfferItems = (offers, showBroker, showCarrier) => (
+    <ul>
+      {offers.map((offer, index) => {
+        const brokerCompany = offer.load?.company_name || "Unknown Broker";
+        const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
+
+        return (
+          <li key={offer.id}>
+            <strong>{index + 1}.</strong> <br />
+            <strong>Amount:</strong> ${offer.offer_amount || offer.amount} <br />
+            {showCarrier && <><strong>Carrier:</strong> {carrierCompany} <br /></>}
+            {showBroker && <><strong>Broker:</strong> {brokerCompany} <br /></>}
+            <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
+          </li>
+        );
+      })}
+    </ul>
+  );
+
   if (error) return <Alert severity="error">{error}</Alert>;
   if (!profile) return <Typography sx={{ m: 3 }}>Loading profile...</Typography>;
-
-  const renderOffersList = (offers) =>
-    offers.length > 0 ? (
-      <List>
-        {offers.map((offer) =>
-          offer.load ? (
-            <ListItem key={offer.id} divider>
-              <ListItemText
-                primary={`Load #${offer.load.id}`}
-                secondary={`${offer.load.pickup_city} → ${offer.load.delivery_city} | $${offer.offer_amount}`}
-              />
-            </ListItem>
-          ) : null
-        )}
-      </List>
-    ) : (
-      <Typography sx={{ mb: 2 }}>No offers to display.</Typography>
-    );
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -169,17 +164,17 @@ function Profile({ user }) {
       {role === "carrier" && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">My Submitted Offers</Typography>
-          {renderOffersList(submittedOffers)}
+          {renderOfferItems(submittedOffers, true, false)}
           <Divider sx={{ my: 4 }} />
           <Typography variant="h5">My Won Bids</Typography>
-          {renderOffersList(wonBids)}
+          {renderOfferItems(wonBids, true, false)}
         </Box>
       )}
 
       {role === "broker" && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">Offers Received</Typography>
-          {renderOffersList(receivedOffers)}
+          {renderOfferItems(receivedOffers, false, true)}
         </Box>
       )}
     </Container>
