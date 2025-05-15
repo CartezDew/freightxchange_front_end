@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getLoad, deleteLoad } from "../services/loads.js";
+import { updateOffer, deleteOffer } from "../services/offers.js"; // Make sure you have these in your offers.js service
 
 function LoadDetail() {
   const { loadId } = useParams();
@@ -14,7 +15,6 @@ function LoadDetail() {
         const loadData = await getLoad(loadId);
         setLoad(loadData);
 
-        // Compare current user's profile ID with broker ID on the load
         const currentProfileId = localStorage.getItem("profileId");
         if (
           loadData.broker &&
@@ -30,7 +30,7 @@ function LoadDetail() {
     fetchLoad();
   }, [loadId]);
 
-  const handleDelete = async () => {
+  const handleDeleteLoad = async () => {
     try {
       await deleteLoad(loadId);
       navigate("/loads");
@@ -39,26 +39,78 @@ function LoadDetail() {
     }
   };
 
+  const handleEdit = async (offerId) => {
+    const newAmount = prompt("Enter new bid amount:");
+    if (!newAmount || isNaN(newAmount)) return alert("Invalid amount");
+
+    try {
+      await updateOffer(offerId, { amount: parseFloat(newAmount) });
+      alert("Offer updated!");
+      window.location.reload();
+    } catch (err) {
+      console.error("Edit failed", err);
+      alert("Failed to update offer.");
+    }
+  };
+
+  const handleDelete = async (offerId) => {
+    if (!window.confirm("Are you sure you want to delete this offer?")) return;
+
+    try {
+      await deleteOffer(offerId);
+      alert("Offer deleted!");
+      window.location.reload();
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Failed to delete offer.");
+    }
+  };
+
   if (!load) return <p>Loading load details...</p>;
 
   return (
     <div className="load-detail-container">
       <h1>Load Detail</h1>
-        <p><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</p>
-        <p><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</p>
-        <p><strong>Pickup Date:</strong> {load.pickup_date ? new Date(load.pickup_date).toLocaleDateString() : "Not Provided"}</p>
-        <p><strong>Delivery Date:</strong> {load.delivery_date ? new Date(load.delivery_date).toLocaleDateString() : "Not Provided"}</p>
-        <p><strong>Equipment Requirements:</strong> {load.equipment_requirements}</p>
-        <p><strong>Pickup Date:</strong> {load.pickupDate ? new Date(load.pickupDate).toLocaleDateString() : "Not Provided"}</p>
-        <p><strong>Delivery Date:</strong> {load.deliveryDate ? new Date(load.deliveryDate).toLocaleDateString() : "Not Provided"}</p>
-        <p><strong>Commodity:</strong> {load.commodity}</p>
+      <p><strong>Company Name:</strong> {load.company_name}</p>
+      <p><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</p>
+      <p><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</p>
+      <p><strong>Pickup Date:</strong> {load.pickup_date ? new Date(load.pickup_date).toLocaleDateString() : "Not Provided"}</p>
+      <p><strong>Delivery Date:</strong> {load.delivery_date ? new Date(load.delivery_date).toLocaleDateString() : "Not Provided"}</p>
+      <p><strong>Equipment Requirements:</strong> {load.equipment_requirements}</p>
+      <p><strong>Commodity:</strong> {load.commodity}</p>
+      <p><strong>Rate:</strong> ${load.rate}</p>
 
       {isOwner && (
         <div className="button-group">
           <Link to={`/loads/${loadId}/edit`}>
             <button>Edit Load</button>
           </Link>
-          <button onClick={handleDelete}>Delete Load</button>
+          <button onClick={handleDeleteLoad}>Delete Load</button>
+        </div>
+      )}
+
+      {load.offers && load.offers.length > 0 && (
+        <div className="bids-section">
+          <h2>Submitted Bids</h2>
+          <ul>
+            {load.offers.map((offer) => {
+              const isCarrierOwner = localStorage.getItem("profileId") === String(offer.carrier);
+              return (
+                <li key={offer.id}>
+                  <strong>Amount:</strong> ${offer.amount} <br />
+                  <strong>Carrier:</strong> {offer.carrier_name} <br />
+                  <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
+
+                  {isCarrierOwner && (
+                    <>
+                      <button onClick={() => handleEdit(offer.id)}>Edit</button>
+                      <button onClick={() => handleDelete(offer.id)}>Delete</button>
+                    </>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
     </div>
