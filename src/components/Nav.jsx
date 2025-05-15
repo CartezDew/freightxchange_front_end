@@ -37,28 +37,31 @@ function Nav({ user }) {
         </Box>
 
         {/* Navigation Links */}
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          {user ? (
-            <>
-              <Button component={Link} to="/profile" sx={navLinkStyle}>
-                My Profile
-              </Button>
-              <Button component={Link} to="/loads" sx={navLinkStyle}>
-                Loads
-              </Button>
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        {user ? (
+          <>
+            <Button component={Link} to="/profile" sx={navLinkStyle}>
+              My Profile
+            </Button>
+            <Button component={Link} to="/loads" sx={navLinkStyle}>
+              Loads
+            </Button>
+            {user.role === "broker" && (
               <Button component={Link} to="/loads/new" sx={navLinkStyle}>
                 Add Load
               </Button>
-              <Button onClick={handleSignOut} sx={navButtonStyle}>
-                Sign Out
-              </Button>
-            </>
-          ) : (
-            <Button component={Link} to="/register" sx={navLinkStyle}>
-              Register
+            )}
+            <Button onClick={handleSignOut} sx={navButtonStyle}>
+              Sign Out
             </Button>
-          )}
-        </Box>
+          </>
+        ) : (
+          <Button component={Link} to="/register" sx={navLinkStyle}>
+            Register
+          </Button>
+        )}
+      </Box>
+
       </Toolbar>
     </AppBar>
   );
