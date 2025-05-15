@@ -10,6 +10,7 @@ import {
   MenuItem,
   Button,
   Divider,
+  Paper,
 } from "@mui/material";
 
 const EQUIPMENT_OPTIONS = [
@@ -93,22 +94,22 @@ function Profile({ user }) {
   };
 
   const renderOfferItems = (offers, showBroker, showCarrier) => (
-    <ul>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {offers.map((offer, index) => {
-        const brokerCompany = offer.load?.company_name || "Unknown Broker";
+        const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
 
         return (
-          <li key={offer.id}>
-            <strong>{index + 1}.</strong> <br />
-            <strong>Amount:</strong> ${offer.offer_amount || offer.amount} <br />
-            {showCarrier && <><strong>Carrier:</strong> {carrierCompany} <br /></>}
-            {showBroker && <><strong>Broker:</strong> {brokerCompany} <br /></>}
-            <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
-          </li>
+          <Paper key={offer.id} variant="outlined" sx={{ p: 2 }}>
+            <Typography variant="h6" align="center" sx={{ mb: 1 }}>Bid {index + 1}</Typography>
+            <Typography><strong>Amount:</strong> ${offer.offer_amount || offer.amount}</Typography>
+            {showCarrier && <Typography><strong>Carrier:</strong> {carrierCompany}</Typography>}
+            {showBroker && <Typography><strong>Broker:</strong> {brokerCompany}</Typography>}
+            <Typography><strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
+          </Paper>
         );
       })}
-    </ul>
+    </Box>
   );
 
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -167,7 +168,11 @@ function Profile({ user }) {
           {renderOfferItems(submittedOffers, true, false)}
           <Divider sx={{ my: 4 }} />
           <Typography variant="h5">My Won Bids</Typography>
-          {renderOfferItems(wonBids, true, false)}
+          {wonBids.length > 0 ? (
+            renderOfferItems(wonBids, true, false)
+          ) : (
+            <Typography sx={{ mt: 2 }}>You haven't been awarded any loads.</Typography>
+          )}
         </Box>
       )}
 
