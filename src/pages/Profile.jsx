@@ -94,7 +94,7 @@ function Profile({ user }) {
   };
 
   const renderOfferItems = (offers, showBroker, showCarrier) => (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <ul>
       {offers.map((offer, index) => {
         const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
@@ -104,16 +104,16 @@ function Profile({ user }) {
         });
 
         return (
-          <Paper key={offer.id} variant="outlined" sx={{ p: 2 }}>
-            <Typography variant="h6" align="center" sx={{ mb: 1 }}>Bid {index + 1}</Typography>
-            <Typography><strong>Amount:</strong> ${formattedAmount}</Typography>
-            {showCarrier && <Typography><strong>Carrier:</strong> {carrierCompany}</Typography>}
-            {showBroker && <Typography><strong>Broker:</strong> {brokerCompany}</Typography>}
-            <Typography><strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
-          </Paper>
+          <li key={offer.id}>
+            <strong>{index + 1}.</strong> <br />
+            <strong>Amount:</strong> ${offer.offer_amount || offer.amount} <br />
+            {showCarrier && <><strong>Carrier:</strong> {carrierCompany} <br /></>}
+            {showBroker && <><strong>Broker:</strong> {brokerCompany} <br /></>}
+            <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
+          </li>
         );
       })}
-    </Box>
+    </ul>
   );
 
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -122,72 +122,123 @@ function Profile({ user }) {
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Button variant="outlined" onClick={() => setIsEditing(!isEditing)}>
+        <Button
+          variant="outlined"
+          onClick={() => setIsEditing(!isEditing)}
+          sx={{
+            color: '#5D3A00',
+            borderColor: '#5D3A00',
+            '&:hover': {
+              backgroundColor: '#f8f2ec',
+              borderColor: '#5D3A00',
+            },
+          }}
+        >
           {isEditing ? "Cancel" : "Edit Profile"}
         </Button>
       </Box>
 
-      {isEditing ? (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField label="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
-          <TextField label="Authority ID" value={authorityId} onChange={(e) => setAuthorityId(e.target.value)} required />
-          {role === "carrier" && (
-            <>
-              <TextField label="License ID" value={licenseId} onChange={(e) => setLicenseId(e.target.value)} required />
-              <TextField
-                select
-                label="Equipment Type"
-                value={equipmentType}
-                onChange={(e) => setEquipmentType(e.target.value)}
-                required
-              >
-                {EQUIPMENT_OPTIONS.map((option) => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </TextField>
-            </>
-          )}
-          <Button variant="contained" color="primary" onClick={handleSave}>Save Profile</Button>
-        </Box>
-      ) : (
-        <Box>
-          <Typography variant="h6">Company Name:</Typography>
-          <Typography>{profile.company_name}</Typography>
-          <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
-          <Typography>{profile.authority_id}</Typography>
-          {role === "carrier" && (
-            <>
-              <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
-              <Typography>{profile.license_id}</Typography>
-              <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
-              <Typography>{profile.equipment_type}</Typography>
-            </>
-          )}
-        </Box>
-      )}
+      <Box sx={{ backgroundColor: "#fdf8f3", p: 3, borderRadius: 2, boxShadow: 2 }}>
+        {isEditing ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Company Name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+              sx={textFieldStyle}
+            />
+            <TextField
+              label="Authority ID"
+              value={authorityId}
+              onChange={(e) => setAuthorityId(e.target.value)}
+              required
+              sx={textFieldStyle}
+            />
+            {role === "carrier" && (
+              <>
+                <TextField
+                  label="License ID"
+                  value={licenseId}
+                  onChange={(e) => setLicenseId(e.target.value)}
+                  required
+                  sx={textFieldStyle}
+                />
+                <TextField
+                  select
+                  label="Equipment Type"
+                  value={equipmentType}
+                  onChange={(e) => setEquipmentType(e.target.value)}
+                  required
+                  sx={textFieldStyle}
+                >
+                  {EQUIPMENT_OPTIONS.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </TextField>
+              </>
+            )}
+            <Button
+              variant="contained"
+              onClick={handleSave}
+              sx={{
+                backgroundColor: '#5D3A00',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#4a2f00',
+                },
+              }}
+            >
+              Save Profile
+            </Button>
+          </Box>
+        ) : (
+          <Box>
+            <Typography variant="h6">Company Name:</Typography>
+            <Typography>{profile.company_name}</Typography>
+            <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
+            <Typography>{profile.authority_id}</Typography>
+            {role === "carrier" && (
+              <>
+                <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
+                <Typography>{profile.license_id}</Typography>
+                <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
+                <Typography>{profile.equipment_type}</Typography>
+              </>
+            )}
+          </Box>
+        )}
+      </Box>
 
       {role === "carrier" && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5">My Submitted Offers</Typography>
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h5" sx={{ color: "#5D3A00", mb: 2 }}>My Submitted Offers</Typography>
           {renderOfferItems(submittedOffers, true, false)}
           <Divider sx={{ my: 4 }} />
           <Typography variant="h5">My Won Bids</Typography>
-          {wonBids.length > 0 ? (
-            renderOfferItems(wonBids, true, false)
-          ) : (
-            <Typography sx={{ mt: 2 }}>You haven't been awarded any loads.</Typography>
-          )}
+          {renderOfferItems(wonBids, true, false)}
         </Box>
       )}
 
       {role === "broker" && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5">Offers Received</Typography>
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h5" sx={{ color: "#5D3A00", mb: 2 }}>Offers Received</Typography>
           {renderOfferItems(receivedOffers, false, true)}
         </Box>
       )}
     </Container>
   );
 }
+
+const textFieldStyle = {
+  '& label': { color: '#5D3A00' },
+  '& label.Mui-focused': { color: '#5D3A00' },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': { borderColor: '#5D3A00' },
+    '&:hover fieldset': { borderColor: '#5D3A00' },
+    '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+  },
+};
+
 
 export default Profile;
