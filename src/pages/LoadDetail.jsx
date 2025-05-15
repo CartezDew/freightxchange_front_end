@@ -88,12 +88,12 @@ function LoadDetail() {
 
         <Divider sx={{ mb: 2 }} />
 
-        <Typography><strong>Company Name:</strong> {load.company_name}</Typography>
-        <Typography><strong>Pickup Location:</strong> {load.pickup_city}, {load.pickup_state}</Typography>
-        <Typography><strong>Delivery Location:</strong> {load.delivery_city}, {load.delivery_state}</Typography>
+        <Typography><strong>Broker:</strong> {load.company_name}</Typography>
+        <Typography><strong>Pickup:</strong> {load.pickup_city}, {load.pickup_state}</Typography>
+        <Typography><strong>Delivery:</strong> {load.delivery_city}, {load.delivery_state}</Typography>
         <Typography><strong>Pickup Date:</strong> {new Date(load.pickup_date).toLocaleDateString()}</Typography>
         <Typography><strong>Delivery Date:</strong> {new Date(load.delivery_date).toLocaleDateString()}</Typography>
-        <Typography><strong>Equipment Requirements:</strong> {load.equipment_requirements}</Typography>
+        <Typography><strong>Required Equipment:</strong> {load.equipment_requirements}</Typography>
         <Typography><strong>Commodity:</strong> {load.commodity}</Typography>
         <Typography><strong>Rate:</strong> ${load.rate}</Typography>
 

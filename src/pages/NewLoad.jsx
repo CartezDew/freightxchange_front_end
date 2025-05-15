@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createNewLoad } from '../services/loads.js';
 import {
@@ -25,6 +25,14 @@ function NewLoad() {
     delivery_date: "",
     commodity: "",
   });
+
+  // Prevent access for carriers
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role === "carrier") {
+      navigate("/loads"); // Redirect carriers to the loads page
+    }
+  }, [navigate]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

@@ -13,11 +13,10 @@ import {
 } from '@mui/material';
 
 const LoadCard = ({ load }) => {
-  const role = localStorage.getItem('role'); // 'carrier' or 'broker'
-
+  const role = localStorage.getItem('role');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState('');
-  const [modalStage, setModalStage] = useState('input'); // input | success | error
+  const [modalStage, setModalStage] = useState('input');
   const [modalMessage, setModalMessage] = useState('');
 
   const openModal = () => {
@@ -61,7 +60,7 @@ const LoadCard = ({ load }) => {
         sx={{
           width: 300,
           m: 2,
-          p: 1,
+          p: 2,
           borderRadius: 2,
           boxShadow: 3,
           display: 'flex',
@@ -69,20 +68,38 @@ const LoadCard = ({ load }) => {
           justifyContent: 'space-between',
         }}
       >
-        <CardContent component={Link} to={`/loads/${load.id}`} sx={{ textDecoration: 'none' }}>
-          <Typography variant="h6" sx={{ color: '#5d4037' }} gutterBottom>
+        <CardContent
+          component={Link}
+          to={`/loads/${load.id}`}
+          sx={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          {/* Rate prominently displayed at the top */}
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 700, color: '#1a237e', mb: 2 }}
+          >
+            ${load.rate}
+          </Typography>
+
+          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
             {load.company_name}
           </Typography>
-          <Typography variant="body2" sx={{ color: '#191970' }}>
-            <strong>Pick-up Location:</strong> {load.pickup_city}, {load.pickup_state}
+
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <strong>Pick-up:</strong> {load.pickup_city}, {load.pickup_state}
           </Typography>
-          <Typography variant="body2" sx={{ color: '#191970' }}>
-            <strong>Rate:</strong> ${load.rate}
+
+          <Typography variant="body2">
+            <strong>Drop-off:</strong> {load.delivery_city}, {load.delivery_state}
+          </Typography>
+
+          <Typography variant="body2">
+            <strong>Equipment:</strong> {load.equipment_requirements}
           </Typography>
         </CardContent>
 
         {role?.toLowerCase() === 'carrier' && (
-          <Box sx={{ px: 2, pb: 2, pt: 1 }}>
+          <Box sx={{ px: 2, pb: 2 }}>
             <Button
               fullWidth
               variant="contained"
@@ -94,7 +111,6 @@ const LoadCard = ({ load }) => {
                 fontWeight: 600,
                 textTransform: 'none',
                 boxShadow: 2,
-                py: 1,
                 '&:hover': {
                   backgroundColor: '#8b4513',
                 },
