@@ -92,4 +92,3 @@ const Loads = () => {
 
 export default Loads;
 
-

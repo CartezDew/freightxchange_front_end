@@ -98,6 +98,10 @@ function Profile({ user }) {
       {offers.map((offer, index) => {
         const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
+        const formattedAmount = Number(offer.offer_amount || offer.amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
 
         return (
           <li key={offer.id}>
@@ -235,5 +239,6 @@ const textFieldStyle = {
     '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
   },
 };
+
 
 export default Profile;
