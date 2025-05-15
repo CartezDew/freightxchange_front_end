@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // ✅ include useEffect
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
 
@@ -9,18 +9,22 @@ function Register({ setUser }) {
     username: "",
     email: "",
     password: "",
-    role: "carrier", // Default is carrier
+    role: "carrier",
     isError: false,
     errorMsg: "",
   });
 
+  // ✅ Redirect logged-in users
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (access) {
+      navigate("/profile"); // or any other route you prefer
+    }
+  }, [navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleRoleToggle = () => {
@@ -32,11 +36,9 @@ function Register({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const userData = await signUp(form);
       setUser(userData);
-
       navigate(form.role === "broker" ? "/loads" : "/carrier-profiles");
     } catch (error) {
       console.error(error);
@@ -108,7 +110,9 @@ function Register({ setUser }) {
               cursor: "pointer",
             }}
           >
-            {form.role === "carrier" ? "Carrier (Click to switch to Broker)" : "Broker (Click to switch to Carrier)"}
+            {form.role === "carrier"
+              ? "Carrier (Click to switch to Broker)"
+              : "Broker (Click to switch to Carrier)"}
           </button>
         </div>
 
@@ -119,4 +123,3 @@ function Register({ setUser }) {
 }
 
 export default Register;
-
