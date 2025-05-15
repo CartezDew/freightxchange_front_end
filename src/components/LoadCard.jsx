@@ -58,6 +58,7 @@ const LoadCard = ({ load }) => {
           <h1>{load.company_name}</h1>
           <h2>Pick-up Location: {load.pickupCity}, {load.pickupState}</h2>
           <h2>Rate: {load.rate}</h2>
+
         </Link>
         {role === 'carrier' && (
           <button className="bid-button" onClick={openModal}>
