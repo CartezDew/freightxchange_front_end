@@ -61,7 +61,7 @@ function Home({ setUser }) {
             Built for carriers. Backed by brokers.
           </Typography>
 
-          <Box className="home-about">
+          <Box className="home-about" sx={{ my: 3 }}>
             <Typography variant="h5" align="center" gutterBottom>
               About Us
             </Typography>
@@ -72,7 +72,7 @@ function Home({ setUser }) {
             </Typography>
           </Box>
 
-          <Divider className="home-divider" />
+          <Divider sx={{ my: 4 }} />
 
           <Box component="form" onSubmit={handleSubmit} className="home-form">
             <Typography variant="h5" gutterBottom>
@@ -87,6 +87,15 @@ function Home({ setUser }) {
               fullWidth
               required
               autoComplete="off"
+              sx={{
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
             />
 
             <TextField
@@ -98,17 +107,44 @@ function Home({ setUser }) {
               fullWidth
               required
               autoComplete="off"
+              sx={{
+                mt: 2,
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
             />
 
-            {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
+            {form.isError && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {form.errorMsg}
+              </Alert>
+            )}
 
-            <Button type="submit" variant="contained" fullWidth className="home-login-button">
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                mt: 3,
+                backgroundColor: '#5D3A00',
+                '&:hover': { backgroundColor: '#3e2600' },
+              }}
+            >
               Log In
             </Button>
 
-            <Typography variant="body2" className="home-register-text">
+            <Typography variant="body2" sx={{ mt: 2 }}>
               No account?{" "}
-              <Link component={RouterLink} to="/register">
+              <Link
+                component={RouterLink}
+                to="/register"
+                sx={{ color: '#191970', textDecoration: 'underline', fontWeight: 'bold' }}
+              >
                 Sign up here!
               </Link>
             </Typography>
