@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { signIn } from "../services/users.js";
-
 import {
   Container,
   Box,
@@ -10,11 +9,12 @@ import {
   Typography,
   Alert,
   Link,
+  Paper,
+  Divider,
 } from "@mui/material";
 
 function Home({ setUser }) {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -24,7 +24,6 @@ function Home({ setUser }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
@@ -33,7 +32,6 @@ function Home({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const userData = await signIn(form);
       setUser(userData);
@@ -50,56 +48,89 @@ function Home({ setUser }) {
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          mt: 8,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          Login
+    <Container maxWidth="sm" sx={{ mt: 6 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h3" align="center" gutterBottom>
+          Welcome to FreightXchange
         </Typography>
 
-        <TextField
-          label="Username"
-          name="username"
-          value={form.username}
-          onChange={handleChange}
-          fullWidth
-          required
-          autoComplete="off"
-        />
-
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          fullWidth
-          required
-          autoComplete="off"
-        />
-
-        {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
-
-        <Button type="submit" variant="contained" fullWidth>
-          Log In
-        </Button>
-
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          No account?{" "}
-          <Link component={RouterLink} to="/register">
-            Sign up here!
-          </Link>
+        <Typography variant="subtitle1" align="center" sx={{ mb: 3 }}>
+          Built for carriers. Backed by brokers.
         </Typography>
-      </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            About Us
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            FreightXchange was created to give small carriers a level playing field in the freight
+            world. We believe in transparency, accessibility, and empowering owner-operators and
+            brokers to build trust through better tools — not middlemen.
+          </Typography>
+        </Box>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Login
+          </Typography>
+
+          <TextField
+            label="Username"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            fullWidth
+            required
+            autoComplete="off"
+          />
+
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            fullWidth
+            required
+            autoComplete="off"
+          />
+
+          {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#191970",
+              color: "#fff",
+              '&:hover': { backgroundColor: "#000080" },
+              fontWeight: 600,
+              textTransform: "none"
+            }}
+          >
+            Log In
+          </Button>
+
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            No account?{" "}
+            <Link component={RouterLink} to="/register">
+              Sign up here!
+            </Link>
+          </Typography>
+        </Box>
+      </Paper>
     </Container>
   );
 }
