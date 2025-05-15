@@ -11,6 +11,16 @@ const api = axios.create({
       : 'http://localhost:8000',
 });
 
+
+
+export const updateOffer = async (id, offerData) => {
+  const res = await api.put(`/offers/${id}/`, offerData);
+  return res.data;
+};
+
+export const deleteOffer = async (id) => {
+  await api.delete(`/offers/${id}/`);
+};
 // Request Interceptor: Add Authorization Header
 api.interceptors.request.use(
   async (config) => {
