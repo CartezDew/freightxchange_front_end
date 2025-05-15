@@ -10,6 +10,7 @@ import {
   MenuItem,
   Button,
   Divider,
+  Paper,
 } from "@mui/material";
 
 const EQUIPMENT_OPTIONS = [
@@ -93,39 +94,22 @@ function Profile({ user }) {
   };
 
   const renderOfferItems = (offers, showBroker, showCarrier) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+    <ul>
       {offers.map((offer, index) => {
-        const brokerCompany = offer.load?.company_name || "Unknown Broker";
+        const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
 
         return (
-          <Box key={offer.id} sx={{
-            p: 2,
-            border: '1px solid #ddd',
-            borderRadius: 2,
-            backgroundColor: '#fff8f0',
-            boxShadow: 1
-          }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {index + 1}. ${offer.offer_amount || offer.amount}
-            </Typography>
-            <Typography variant="body2">
-              Date: {new Date(offer.submitted_at).toLocaleDateString()}
-            </Typography>
-            {showCarrier && (
-              <Typography variant="body2">
-                Carrier: {carrierCompany}
-              </Typography>
-            )}
-            {showBroker && (
-              <Typography variant="body2">
-                Broker: {brokerCompany}
-              </Typography>
-            )}
-          </Box>
+          <li key={offer.id}>
+            <strong>{index + 1}.</strong> <br />
+            <strong>Amount:</strong> ${offer.offer_amount || offer.amount} <br />
+            {showCarrier && <><strong>Carrier:</strong> {carrierCompany} <br /></>}
+            {showBroker && <><strong>Broker:</strong> {brokerCompany} <br /></>}
+            <strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()} <br />
+          </li>
         );
       })}
-    </Box>
+    </ul>
   );
 
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -227,7 +211,7 @@ function Profile({ user }) {
           <Typography variant="h5" sx={{ color: "#5D3A00", mb: 2 }}>My Submitted Offers</Typography>
           {renderOfferItems(submittedOffers, true, false)}
           <Divider sx={{ my: 4 }} />
-          <Typography variant="h5" sx={{ color: "#5D3A00", mb: 2 }}>My Won Bids</Typography>
+          <Typography variant="h5">My Won Bids</Typography>
           {renderOfferItems(wonBids, true, false)}
         </Box>
       )}

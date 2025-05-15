@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // ✅ include useEffect
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
 import {
@@ -20,6 +20,14 @@ function Register({ setUser }) {
     isError: false,
     errorMsg: "",
   });
+}
+  // ✅ Redirect logged-in users
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    if (access) {
+      navigate("/profile"); // or any other route you prefer
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -161,7 +169,7 @@ function Register({ setUser }) {
       </Box>
     </Container>
   );
-}
+
 
 export default Register;
 
