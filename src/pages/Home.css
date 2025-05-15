@@ -1,0 +1,61 @@
+/* styles/Home.css */
+
+.home-container {
+    margin-top: 3rem;
+  }
+  
+  .home-paper {
+    padding: 2.5rem;
+    background-color: #fffdf7;
+    border-radius: 12px;
+  }
+  
+  .home-subtitle {
+    margin-bottom: 1.5rem;
+    color: #5d4037;
+    font-weight: 500;
+  }
+  
+  .home-about {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .home-divider {
+    margin: 2rem 0;
+  }
+  
+  .home-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .home-login-button {
+    background-color: #191970 !important;
+    color: #fff !important;
+    font-weight: 600;
+    text-transform: none;
+  }
+  
+  .home-login-button:hover {
+    background-color: #000080 !important;
+  }
+  
+  .home-register-text {
+    margin-top: 1rem;
+  }
+  
+  .home-joke-banner {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fffbea;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    z-index: 1000;
+    font-family: monospace;
+  }
+  

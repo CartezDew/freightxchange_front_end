@@ -11,6 +11,9 @@ import {
   Button,
   Divider,
   Paper,
+  Select,
+  FormControl,
+  Modal
 } from "@mui/material";
 
 const EQUIPMENT_OPTIONS = [
@@ -28,8 +31,14 @@ function Profile({ user }) {
   const [wonBids, setWonBids] = useState([]);
   const [submittedOffers, setSubmittedOffers] = useState([]);
   const [receivedOffers, setReceivedOffers] = useState([]);
-  const navigate = useNavigate();
+  const [declineReasons, setDeclineReasons] = useState({});
+  const [rebidAmounts, setRebidAmounts] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalStage, setModalStage] = useState("input");
+  const [offerToDelete, setOfferToDelete] = useState(null);
 
+  const navigate = useNavigate();
   const [companyName, setCompanyName] = useState("");
   const [authorityId, setAuthorityId] = useState("");
   const [licenseId, setLicenseId] = useState("");
@@ -58,13 +67,24 @@ function Profile({ user }) {
         setEquipmentType(res.data.equipment_type || "");
 
         const offersRes = await api.get(`/offers/?${storedRole}=${profileId}`);
-        const offers = offersRes.data.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+        const offers = offersRes.data.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at)).reverse();
+
+        let latestMap = new Map();
+        offers.forEach(offer => {
+          const key = `${offer.load}-${offer.carrier}`;
+          if (!latestMap.has(key)) {
+            latestMap.set(key, offer);
+          }
+        });
+
+        const latestOffers = Array.from(latestMap.values());
 
         if (storedRole === "carrier") {
-          setSubmittedOffers(offers);
-          setWonBids(offers.filter(o => o.status === "awarded"));
+          const myLatest = latestOffers.filter(o => o.carrier === parseInt(profileId));
+          setSubmittedOffers(myLatest);
+          setWonBids(myLatest.filter(o => o.status === "accepted"));
         } else if (storedRole === "broker") {
-          setReceivedOffers(offers);
+          setReceivedOffers(latestOffers);
         }
 
       } catch (err) {
@@ -93,12 +113,50 @@ function Profile({ user }) {
     }
   };
 
+  const handleBrokerDecision = async (offerId, accepted) => {
+    try {
+      await api.patch(`/offers/${offerId}/`, {
+        status: accepted ? "accepted" : "declined",
+        declined_reason: !accepted ? declineReasons[offerId] || "" : ""
+      });
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to update offer status", err.response?.data || err);
+    }
+  };
+
+  const handleCarrierRebid = async (loadId, amount) => {
+    try {
+      const profileId = localStorage.getItem("profileId");
+      await api.post(`/offers/`, {
+        load: loadId,
+        amount: amount,
+        carrier: profileId
+      });
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to submit rebid", err);
+    }
+  };
+
+  const handleDeleteOffer = async () => {
+    try {
+      await api.delete(`/offers/${offerToDelete}/`);
+      setModalStage("success");
+      setModalMessage("Offer deleted successfully.");
+    } catch (err) {
+      setModalStage("error");
+      setModalMessage("Failed to delete offer.");
+      console.error(err);
+    }
+  };
+
   const renderOfferItems = (offers, showBroker, showCarrier) => (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {offers.map((offer, index) => {
         const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
         const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
-        const formattedAmount = Number(offer.offer_amount || offer.amount).toLocaleString(undefined, {
+        const formattedAmount = Number(offer.amount).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
@@ -110,14 +168,29 @@ function Profile({ user }) {
             {showCarrier && <Typography><strong>Carrier:</strong> {carrierCompany}</Typography>}
             {showBroker && <Typography><strong>Broker:</strong> {brokerCompany}</Typography>}
             <Typography><strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
+            <Typography><strong>Status:</strong> {offer.status}</Typography>
+
+            {role === "carrier" && (
+              <Button
+                size="small"
+                color="error"
+                variant="outlined"
+                sx={{ mt: 1 }}
+                onClick={() => {
+                  setModalStage("confirm");
+                  setModalMessage("Are you sure you want to delete this offer?");
+                  setOfferToDelete(offer.id);
+                  setModalOpen(true);
+                }}
+              >
+                Delete Offer
+              </Button>
+            )}
           </Paper>
         );
       })}
     </Box>
   );
-
-  if (error) return <Alert severity="error">{error}</Alert>;
-  if (!profile) return <Typography sx={{ m: 3 }}>Loading profile...</Typography>;
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -127,6 +200,7 @@ function Profile({ user }) {
         </Button>
       </Box>
 
+      {/* Profile form or display */}
       {isEditing ? (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <TextField label="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
@@ -152,20 +226,21 @@ function Profile({ user }) {
       ) : (
         <Box>
           <Typography variant="h6">Company Name:</Typography>
-          <Typography>{profile.company_name}</Typography>
+          <Typography>{profile?.company_name}</Typography>
           <Typography variant="h6" sx={{ mt: 2 }}>Authority ID:</Typography>
-          <Typography>{profile.authority_id}</Typography>
+          <Typography>{profile?.authority_id}</Typography>
           {role === "carrier" && (
             <>
               <Typography variant="h6" sx={{ mt: 2 }}>License ID:</Typography>
-              <Typography>{profile.license_id}</Typography>
+              <Typography>{profile?.license_id}</Typography>
               <Typography variant="h6" sx={{ mt: 2 }}>Equipment Type:</Typography>
-              <Typography>{profile.equipment_type}</Typography>
+              <Typography>{profile?.equipment_type}</Typography>
             </>
           )}
         </Box>
       )}
 
+      {/* Submitted/Won Offers */}
       {role === "carrier" && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">My Submitted Offers</Typography>
@@ -180,12 +255,41 @@ function Profile({ user }) {
         </Box>
       )}
 
+      {/* Broker's view of offers */}
       {role === "broker" && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">Offers Received</Typography>
           {renderOfferItems(receivedOffers, false, true)}
         </Box>
       )}
+
+      {/* Modal for delete confirmation and messages */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24, width: 300 }}>
+          {modalStage === "confirm" && (
+            <>
+              <Typography variant="h6" gutterBottom>{modalMessage}</Typography>
+              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                <Button fullWidth variant="contained" color="error" onClick={handleDeleteOffer}>Yes</Button>
+                <Button fullWidth variant="outlined" onClick={() => setModalOpen(false)}>No</Button>
+              </Box>
+            </>
+          )}
+          {modalStage === "success" && (
+            <>
+              <Typography variant="h6" gutterBottom>{modalMessage}</Typography>
+              <Button fullWidth variant="contained" onClick={() => window.location.reload()}>Close</Button>
+            </>
+          )}
+          {modalStage === "error" && (
+            <>
+              <Typography variant="h6" color="error" gutterBottom>Error</Typography>
+              <Typography variant="body2" gutterBottom>{modalMessage}</Typography>
+              <Button fullWidth variant="contained" onClick={() => setModalOpen(false)}>Close</Button>
+            </>
+          )}
+        </Box>
+      </Modal>
     </Container>
   );
 }
