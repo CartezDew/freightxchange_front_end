@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
+import {
+  Container,
+  TextField,
+  Typography,
+  Box,
+  Button,
+} from "@mui/material";
 
 function Register({ setUser }) {
   const navigate = useNavigate();
@@ -9,18 +16,14 @@ function Register({ setUser }) {
     username: "",
     email: "",
     password: "",
-    role: "carrier", // Default is carrier
+    role: "carrier",
     isError: false,
     errorMsg: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleRoleToggle = () => {
@@ -32,11 +35,9 @@ function Register({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const userData = await signUp(form);
       setUser(userData);
-
       navigate(form.role === "broker" ? "/loads" : "/carrier-profiles");
     } catch (error) {
       console.error(error);
@@ -49,74 +50,119 @@ function Register({ setUser }) {
     }
   };
 
-  const renderError = () => {
-    const toggleForm = form.isError ? "danger" : "";
-    return (
-      <button type="submit" className={toggleForm}>
-        {form.isError ? form.errorMsg : "Register"}
-      </button>
-    );
-  };
-
   return (
-    <div className="home-container">
-      <form className="home-form" onSubmit={handleSubmit}>
-        <h1>Register for FreightXchange</h1>
+    <Container maxWidth="sm">
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          mt: 8,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
+          Register for FreightXchange
+        </Typography>
 
-        <input
-          type="text"
+        <TextField
+          fullWidth
           name="username"
+          label="Username"
           value={form.username}
-          placeholder="Enter Username"
           onChange={handleChange}
           required
-          autoComplete="off"
+          sx={{
+          '& label': { color: '#5D3A00' },
+          '& label.Mui-focused': { color: '#5D3A00' },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': { borderColor: '#5D3A00' },
+            '&:hover fieldset': { borderColor: '#5D3A00' },
+            '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+            },
+          }}
         />
 
-        <input
-          type="email"
+        <TextField
+          fullWidth
           name="email"
+          type="email"
+          label="Email"
           value={form.email}
-          placeholder="Enter Email"
           onChange={handleChange}
           required
-          autoComplete="off"
-        />
+          sx={{
+            '& label': { color: '#5D3A00' },
+            '& label.Mui-focused': { color: '#5D3A00' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#5D3A00' },
+              '&:hover fieldset': { borderColor: '#5D3A00' },
+              '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+              },
+            }}
+          />
 
-        <input
-          type="password"
+        <TextField
+          fullWidth
           name="password"
+          type="password"
+          label="Password"
           value={form.password}
-          placeholder="Enter Password"
           onChange={handleChange}
           required
-          autoComplete="off"
-        />
-
-        <div className="role-toggle" style={{ margin: "1rem 0" }}>
-          <label style={{ marginRight: "1rem" }}>
-            <strong>Role:</strong>
-          </label>
-          <button
-            type="button"
+          sx={{
+            '& label': { color: '#5D3A00' },
+            '& label.Mui-focused': { color: '#5D3A00' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#5D3A00' },
+              '&:hover fieldset': { borderColor: '#5D3A00' },
+              '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+              },
+            }}
+          />
+          
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography fontWeight="bold">Role:</Typography>
+          <Button
             onClick={handleRoleToggle}
-            style={{
-              padding: "0.5rem 1rem",
+            variant="outlined"
+            sx={{
               borderRadius: "20px",
-              border: "1px solid #ccc",
-              backgroundColor: "#f0f0f0",
-              cursor: "pointer",
+              px: 2,
+              color: "#5D3A00",
+              borderColor: "#5D3A00",
+              "&:hover": {
+                backgroundColor: "#f8f2ec",
+                borderColor: "#5D3A00",
+              },
             }}
           >
-            {form.role === "carrier" ? "Carrier (Click to switch to Broker)" : "Broker (Click to switch to Carrier)"}
-          </button>
-        </div>
+            {form.role === "carrier"
+              ? "Carrier (Click to switch to Broker)"
+              : "Broker (Click to switch to Carrier)"}
+          </Button>
+        </Box>
 
-        {renderError()}
-      </form>
-    </div>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            backgroundColor: form.isError ? "#c62828" : "#5D3A00",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor: form.isError ? "#b71c1c" : "#4a2f00",
+            },
+          }}
+        >
+          {form.isError ? form.errorMsg : "Register"}
+        </Button>
+      </Box>
+    </Container>
   );
 }
 
 export default Register;
+
 

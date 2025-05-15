@@ -93,6 +93,15 @@ function Home({ setUser }) {
             fullWidth
             required
             autoComplete="off"
+            sx={{
+              '& label': { color: '#5D3A00' },
+              '& label.Mui-focused': { color: '#5D3A00' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#5D3A00' },
+                '&:hover fieldset': { borderColor: '#5D3A00' },
+                '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+              },
+            }}
           />
 
           <TextField
@@ -104,6 +113,15 @@ function Home({ setUser }) {
             fullWidth
             required
             autoComplete="off"
+            sx={{
+              '& label': { color: '#5D3A00' },
+              '& label.Mui-focused': { color: '#5D3A00' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#5D3A00' },
+                '&:hover fieldset': { borderColor: '#5D3A00' },
+                '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+              },
+            }}
           />
 
           {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
@@ -125,7 +143,11 @@ function Home({ setUser }) {
 
           <Typography variant="body2" sx={{ mt: 2 }}>
             No account?{" "}
-            <Link component={RouterLink} to="/register">
+            <Link
+              component={RouterLink}
+              to="/register"
+              sx={{ color: '#191970', textDecoration: 'underline', fontWeight: 'bold' }}
+            >
               Sign up here!
             </Link>
           </Typography>
