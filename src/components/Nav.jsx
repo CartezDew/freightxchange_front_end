@@ -18,6 +18,7 @@ function Nav({ user }) {
   const isRegisterPage = location.pathname === "/register";
   const isProfilePage = location.pathname === "/profile";
   const isAddLoadPage = location.pathname === "/loads/new";
+  const isLoadsPage = location.pathname === "/loads";
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#fff8f0', boxShadow: 1 }}>
@@ -50,9 +51,11 @@ function Nav({ user }) {
                   My Profile
                 </Button>
               )}
-              <Button component={Link} to="/loads" sx={navLinkStyle}>
-                Loads
-              </Button>
+              {!isLoadsPage && (
+                <Button component={Link} to="/loads" sx={navLinkStyle}>
+                  Loads
+                </Button>
+              )}
               {user.role === "broker" && !isAddLoadPage && (
                 <Button component={Link} to="/loads/new" sx={navLinkStyle}>
                   Add Load
@@ -64,11 +67,6 @@ function Nav({ user }) {
             </>
           ) : (
             <>
-              {isHomePage && (
-                <Button component={Link} to="/register" sx={navLinkStyle}>
-                  Register
-                </Button>
-              )}
               {isRegisterPage && (
                 <Button component={Link} to="/" sx={navLinkStyle}>
                   Home

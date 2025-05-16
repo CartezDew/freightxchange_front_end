@@ -5,15 +5,15 @@ import {
   Container,
   Typography,
   Box,
-  Alert,
   TextField,
   MenuItem,
   Button,
   Divider,
   Paper,
+  Modal,
   Select,
   FormControl,
-  Modal
+  InputLabel,
 } from "@mui/material";
 
 const EQUIPMENT_OPTIONS = [
@@ -21,6 +21,10 @@ const EQUIPMENT_OPTIONS = [
   "Dry Van", "Dumptruck", "Flatbed", "Gooseneck", "Hotshot",
   "Livestock Trailer", "Logging", "Lowboy", "Power Only",
   "Reefer", "Step Deck", "Tanker", "Walking Floor"
+];
+
+const DECLINE_REASONS = [
+  "Too High", "Already Booked", "No Longer Available"
 ];
 
 function Profile({ user }) {
@@ -32,7 +36,6 @@ function Profile({ user }) {
   const [submittedOffers, setSubmittedOffers] = useState([]);
   const [receivedOffers, setReceivedOffers] = useState([]);
   const [declineReasons, setDeclineReasons] = useState({});
-  const [rebidAmounts, setRebidAmounts] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalStage, setModalStage] = useState("input");
@@ -49,66 +52,54 @@ function Profile({ user }) {
       const token = localStorage.getItem("access");
       const storedRole = localStorage.getItem("role");
       const profileId = localStorage.getItem("profileId");
-
-      if (!token || !storedRole || !profileId) {
-        navigate("/");
-        return;
-      }
-
+      if (!token || !storedRole || !profileId) return navigate("/");
       setRole(storedRole);
 
       try {
         const res = await api.get(`/${storedRole}-profiles/${profileId}/`);
         setProfile(res.data);
-
         setCompanyName(res.data.company_name || "");
         setAuthorityId(res.data.authority_id || "");
         setLicenseId(res.data.license_id || "");
         setEquipmentType(res.data.equipment_type || "");
 
         const offersRes = await api.get(`/offers/?${storedRole}=${profileId}`);
-        const offers = offersRes.data.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at)).reverse();
+        const sorted = offersRes.data.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at)).reverse();
 
         let latestMap = new Map();
-        offers.forEach(offer => {
-          const key = `${offer.load}-${offer.carrier}`;
-          if (!latestMap.has(key)) {
-            latestMap.set(key, offer);
-          }
+        sorted.forEach(o => {
+          const key = `${o.load}-${o.carrier}`;
+          if (!latestMap.has(key)) latestMap.set(key, o);
         });
 
-        const latestOffers = Array.from(latestMap.values());
-
+        const latest = Array.from(latestMap.values());
         if (storedRole === "carrier") {
-          const myLatest = latestOffers.filter(o => o.carrier === parseInt(profileId));
+          const myLatest = latest.filter(o => o.carrier === parseInt(profileId));
           setSubmittedOffers(myLatest);
           setWonBids(myLatest.filter(o => o.status === "accepted"));
         } else if (storedRole === "broker") {
-          setReceivedOffers(latestOffers);
+          setReceivedOffers(latest);
         }
-
       } catch (err) {
         console.error(err);
         setError("Could not load profile.");
       }
     };
-
     fetchProfile();
   }, [navigate]);
 
   const handleSave = async () => {
     try {
-      const updatedFields = {
+      const updated = {
         company_name: companyName,
         authority_id: authorityId,
-        ...(role === "carrier" && { license_id: licenseId, equipment_type: equipmentType }),
+        ...(role === "carrier" && { license_id: licenseId, equipment_type: equipmentType })
       };
-
       const profileId = localStorage.getItem("profileId");
-      await api.patch(`/${role}-profiles/${profileId}/`, updatedFields);
+      await api.patch(`/${role}-profiles/${profileId}/`, updated);
       window.location.reload();
     } catch (err) {
-      console.error("Failed to update profile", err);
+      console.error(err);
       setError("Failed to save profile updates.");
     }
   };
@@ -121,21 +112,7 @@ function Profile({ user }) {
       });
       window.location.reload();
     } catch (err) {
-      console.error("Failed to update offer status", err.response?.data || err);
-    }
-  };
-
-  const handleCarrierRebid = async (loadId, amount) => {
-    try {
-      const profileId = localStorage.getItem("profileId");
-      await api.post(`/offers/`, {
-        load: loadId,
-        amount: amount,
-        carrier: profileId
-      });
-      window.location.reload();
-    } catch (err) {
-      console.error("Failed to submit rebid", err);
+      console.error("Failed to update offer", err);
     }
   };
 
@@ -147,7 +124,6 @@ function Profile({ user }) {
     } catch (err) {
       setModalStage("error");
       setModalMessage("Failed to delete offer.");
-      console.error(err);
     }
   };
 
@@ -155,16 +131,24 @@ function Profile({ user }) {
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {offers.map((offer, index) => {
         const brokerCompany = offer.broker_company || offer.load?.company_name || "Unknown Broker";
-        const carrierCompany = offer.carrier_company || offer.carrier_name || offer.carrier || "Unknown Carrier";
-        const formattedAmount = Number(offer.amount).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+        const carrierCompany = offer.carrier_name || "Unknown Carrier";
+        const offerAmount = Number(offer.amount);
+        const rateAmount = Number(offer.rate);
+        const diff = offerAmount - rateAmount;
+        const diffColor = diff > 0 ? 'green' : diff < 0 ? 'red' : 'inherit';
 
         return (
           <Paper key={offer.id} variant="outlined" sx={{ p: 2 }}>
-            <Typography variant="h6" align="center" sx={{ mb: 1 }}>Bid {index + 1}</Typography>
-            <Typography><strong>Amount:</strong> ${formattedAmount}</Typography>
+            <Typography variant="h6" align="center">Bid {index + 1}</Typography>
+            <Typography><strong>Your Offer:</strong> ${offerAmount.toFixed(2)}</Typography>
+            {offer.rate && (
+              <>
+                <Typography><strong>Broker Rate:</strong> ${rateAmount.toFixed(2)}</Typography>
+                <Typography sx={{ color: diffColor, fontWeight: 600 }}>
+                  Difference: ${diff.toFixed(2)}
+                </Typography>
+              </>
+            )}
             {showCarrier && <Typography><strong>Carrier:</strong> {carrierCompany}</Typography>}
             {showBroker && <Typography><strong>Broker:</strong> {brokerCompany}</Typography>}
             <Typography><strong>Date:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
@@ -182,9 +166,29 @@ function Profile({ user }) {
                   setOfferToDelete(offer.id);
                   setModalOpen(true);
                 }}
-              >
-                Delete Offer
-              </Button>
+              >Delete Offer</Button>
+            )}
+
+            {role === "broker" && offer.status === "pending" && (
+              <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <FormControl fullWidth required>
+                  <InputLabel>Decline Reason</InputLabel>
+                  <Select
+                    value={declineReasons[offer.id] || ""}
+                    onChange={(e) => setDeclineReasons(prev => ({ ...prev, [offer.id]: e.target.value }))}
+                    label="Decline Reason"
+                  >
+                    {DECLINE_REASONS.map(reason => (
+                      <MenuItem key={reason} value={reason}>{reason}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button fullWidth variant="contained" color="success" onClick={() => handleBrokerDecision(offer.id, true)}>Accept</Button>
+                  <Button fullWidth variant="outlined" color="error" onClick={() => handleBrokerDecision(offer.id, false)} disabled={!declineReasons[offer.id]}>Decline</Button>
+                </Box>
+              </Box>
             )}
           </Paper>
         );
@@ -198,72 +202,26 @@ function Profile({ user }) {
         <Button
           variant="outlined"
           onClick={() => setIsEditing(!isEditing)}
-          sx={{
-            color: '#5D3A00',
-            borderColor: '#5D3A00',
-            '&:hover': {
-              backgroundColor: '#f8f2ec',
-              borderColor: '#5D3A00',
-            },
-          }}
-        >
-          {isEditing ? "Cancel" : "Edit Profile"}
-        </Button>
+          sx={{ color: '#5D3A00', borderColor: '#5D3A00' }}
+        >{isEditing ? "Cancel" : "Edit Profile"}</Button>
       </Box>
 
       <Box sx={{ backgroundColor: "#fdf8f3", p: 3, borderRadius: 2, boxShadow: 2 }}>
         {isEditing ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              label="Company Name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              required
-              sx={textFieldStyle}
-            />
-            <TextField
-              label="Authority ID"
-              value={authorityId}
-              onChange={(e) => setAuthorityId(e.target.value)}
-              required
-              sx={textFieldStyle}
-            />
+            <TextField label="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required sx={textFieldStyle} />
+            <TextField label="Authority ID" value={authorityId} onChange={(e) => setAuthorityId(e.target.value)} required sx={textFieldStyle} />
             {role === "carrier" && (
               <>
-                <TextField
-                  label="License ID"
-                  value={licenseId}
-                  onChange={(e) => setLicenseId(e.target.value)}
-                  required
-                  sx={textFieldStyle}
-                />
-                <TextField
-                  select
-                  label="Equipment Type"
-                  value={equipmentType}
-                  onChange={(e) => setEquipmentType(e.target.value)}
-                  required
-                  sx={textFieldStyle}
-                >
-                  {EQUIPMENT_OPTIONS.map((option) => (
+                <TextField label="License ID" value={licenseId} onChange={(e) => setLicenseId(e.target.value)} required sx={textFieldStyle} />
+                <TextField select label="Equipment Type" value={equipmentType} onChange={(e) => setEquipmentType(e.target.value)} required sx={textFieldStyle}>
+                  {EQUIPMENT_OPTIONS.map(option => (
                     <MenuItem key={option} value={option}>{option}</MenuItem>
                   ))}
                 </TextField>
               </>
             )}
-            <Button
-              variant="contained"
-              onClick={handleSave}
-              sx={{
-                backgroundColor: '#5D3A00',
-                color: '#fff',
-                '&:hover': {
-                  backgroundColor: '#4a2f00',
-                },
-              }}
-            >
-              Save Profile
-            </Button>
+            <Button variant="contained" onClick={handleSave} sx={{ backgroundColor: '#5D3A00', color: '#fff' }}>Save Profile</Button>
           </Box>
         ) : (
           <Box>
@@ -341,4 +299,3 @@ const textFieldStyle = {
 };
 
 export default Profile;
-
