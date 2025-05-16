@@ -1,24 +1,25 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Button, Badge } from "@mui/material";
 import { signOut } from "../services/users";
 import logo from "../assets/logotightcrop.png";
+import { useEffect, useState } from "react";
 import './Nav.css';
 
 function Nav({ user }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSignOut = () => {
-    signOut();
-    navigate("/");
-    window.location.reload();
-  };
-
   const isHomePage = location.pathname === "/";
   const isRegisterPage = location.pathname === "/register";
   const isProfilePage = location.pathname === "/profile";
   const isAddLoadPage = location.pathname === "/loads/new";
   const isLoadsPage = location.pathname === "/loads";
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/");
+    window.location.reload();
+  };
 
   const formatName = (name) =>
     name
@@ -30,6 +31,36 @@ function Nav({ user }) {
     ? formatName(user.username || user.user?.username || user.id || "User")
     : "";
 
+  const [openBidCount, setOpenBidCount] = useState(0);
+  const [awardedBidCount, setAwardedBidCount] = useState(0);
+  const [totalBidCount, setTotalBidCount] = useState(0);
+
+  useEffect(() => {
+    const updateCountsFromStorage = () => {
+      const open = parseInt(localStorage.getItem("openBidCount") || "0", 10);
+      const awarded = parseInt(localStorage.getItem("awardedBidCount") || "0", 10);
+      const total = parseInt(localStorage.getItem("totalBidCount") || "0", 10);
+
+      setOpenBidCount(open);
+      setAwardedBidCount(awarded);
+      setTotalBidCount(total);
+    };
+
+    updateCountsFromStorage();
+
+    window.addEventListener("storage", updateCountsFromStorage);
+    return () => window.removeEventListener("storage", updateCountsFromStorage);
+  }, []);
+
+  const getBadgeCount = (target) => {
+    if (!user) return 0;
+    if (target === "profile" || target === "loads") {
+      if (user.role === "carrier") return awardedBidCount;
+      if (user.role === "broker" && !isAddLoadPage) return totalBidCount;
+    }
+    return 0;
+  };
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#fff8f0', boxShadow: 1 }}>
       <Toolbar
@@ -39,6 +70,7 @@ function Nav({ user }) {
           paddingY: '4px !important',
         }}
       >
+        {/* Logo and welcome */}
         <Box display="flex" alignItems="center" gap={2}>
           <img
             src={logo}
@@ -52,25 +84,32 @@ function Nav({ user }) {
           )}
         </Box>
 
-        {/* Navigation Links */}
+        {/* Navigation Buttons */}
         <Box sx={{ display: 'flex', gap: 2 }}>
           {user ? (
             <>
               {!isProfilePage && (
-                <Button component={Link} to="/profile" sx={navLinkStyle}>
-                  My Profile
-                </Button>
+                <Badge badgeContent={getBadgeCount("profile")} color="primary" overlap="circular">
+                  <Button component={Link} to="/profile" sx={navLinkStyle}>
+                    My Profile
+                  </Button>
+                </Badge>
               )}
+
               {!isLoadsPage && (
-                <Button component={Link} to="/loads" sx={navLinkStyle}>
-                  Loads
-                </Button>
+                <Badge badgeContent={getBadgeCount("loads")} color="primary" overlap="circular">
+                  <Button component={Link} to="/loads" sx={navLinkStyle}>
+                    Loads
+                  </Button>
+                </Badge>
               )}
+
               {user.role === "broker" && !isAddLoadPage && (
                 <Button component={Link} to="/loads/new" sx={navLinkStyle}>
                   Add Load
                 </Button>
               )}
+
               <Button onClick={handleSignOut} sx={navButtonStyle}>
                 Sign Out
               </Button>
