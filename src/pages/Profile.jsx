@@ -23,9 +23,7 @@ const EQUIPMENT_OPTIONS = [
   "Reefer", "Step Deck", "Tanker", "Walking Floor"
 ];
 
-const DECLINE_REASONS = [
-  "Too High", "Already Booked", "No Longer Available"
-];
+const DECLINE_REASONS = ["Too High", "Already Booked", "No Longer Available"];
 
 function Profile({ user }) {
   const [profile, setProfile] = useState(null);
@@ -73,12 +71,18 @@ function Profile({ user }) {
         });
 
         const latest = Array.from(latestMap.values());
+
         if (storedRole === "carrier") {
           const myLatest = latest.filter(o => o.carrier === parseInt(profileId));
           setSubmittedOffers(myLatest);
-          setWonBids(myLatest.filter(o => o.status === "accepted"));
+          const awarded = myLatest.filter(o => o.status === "accepted");
+          setWonBids(awarded);
+          localStorage.setItem("awardedBidCount", awarded.length.toString());
         } else if (storedRole === "broker") {
           setReceivedOffers(latest);
+          const pending = latest.filter(o => o.status === "pending");
+          localStorage.setItem("openBidCount", pending.length.toString());
+          localStorage.setItem("totalBidCount", latest.length.toString());
         }
       } catch (err) {
         console.error(err);
