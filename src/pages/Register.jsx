@@ -142,10 +142,15 @@ function Register({ setUser }) {
         >
           {form.isError ? form.errorMsg : "Register"}
         </Button>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
   );
 }
+
+
+export default Register;
+
+
 
 const textFieldStyle = {
   '& label': { color: '#5D3A00' },
@@ -158,3 +163,4 @@ const textFieldStyle = {
 };
 
 export default Register;
+
