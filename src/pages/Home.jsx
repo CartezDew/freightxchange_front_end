@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-//import JokeDisplay from "../components/JokeDisplay";
+
+
+import JokeDisplay from "../components/JokeDisplay"; // ✅ Import the JokeDisplay
+
 import { signIn } from "../services/users.js";
 import {
   Container,
@@ -12,6 +15,7 @@ import {
   Link,
   Paper,
   Divider,
+  Fade,
 } from "@mui/material";
 
 function Home({ setUser }) {
@@ -70,6 +74,7 @@ function Home({ setUser }) {
           </Typography>
         </Box>
 
+
         <Divider sx={{ my: 4 }} />
 
         <Box
@@ -127,6 +132,20 @@ function Home({ setUser }) {
 
           {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
 
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" gutterBottom align="center">
+              About Us
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              FreightXchange was created to give small carriers a level playing field in the freight
+              world. We believe in transparency, accessibility, and empowering owner-operators and
+              brokers to build trust through better tools — not middlemen.
+            </Typography>
+          </Box>
+
+          <Divider sx={{ my: 4 }} />
+
+
           <Button
             type="submit"
             variant="contained"
@@ -139,6 +158,7 @@ function Home({ setUser }) {
               textTransform: "none"
             }}
           >
+
             Log In
           </Button>
 
@@ -159,6 +179,100 @@ function Home({ setUser }) {
         </Box>
       </Paper>
     </Container>
+
+            <Typography variant="h5" gutterBottom>
+              Login
+            </Typography>
+
+            <TextField
+              label="Username"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              fullWidth
+              required
+              autoComplete="off"
+              sx={{
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
+            />
+
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              fullWidth
+              required
+              autoComplete="off"
+              sx={{
+                '& label': { color: '#5D3A00' },
+                '& label.Mui-focused': { color: '#5D3A00' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#5D3A00' },
+                  '&:hover fieldset': { borderColor: '#5D3A00' },
+                  '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+                },
+              }}
+            />
+
+            {form.isError && <Alert severity="error">{form.errorMsg}</Alert>}
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: "#191970",
+                color: "#fff",
+                '&:hover': { backgroundColor: "#000080" },
+                fontWeight: 600,
+                textTransform: "none"
+              }}
+            >
+              Log In
+            </Button>
+
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              No account?{" "}
+              <Link
+                component={RouterLink}
+                to="/register"
+                sx={{
+                  color: '#191970',
+                  textDecoration: 'underline',
+                  fontWeight: 'bold',
+                }}
+              >
+                Sign up here!
+              </Link>
+            </Typography>
+          </Box>
+        </Paper>
+      </Container>
+
+      <Fade in timeout={1500}>
+        <Box
+          sx={{
+            mt: 6,
+            backgroundColor: "#f9f3e7",
+            borderTop: "1px solid #e0d6c5",
+            py: 4,
+            px: 2,
+            textAlign: "center",
+          }}
+        >
+          <JokeDisplay />
+        </Box>
+      </Fade>
+    </>
   );
 }
 

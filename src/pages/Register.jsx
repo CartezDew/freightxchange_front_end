@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // ✅ include useEffect
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/users.js";
 import {
@@ -25,7 +25,7 @@ function Register({ setUser }) {
   useEffect(() => {
     const access = localStorage.getItem("access");
     if (access) {
-      navigate("/profile"); // or any other route you prefer
+      navigate("/profile");
     }
   }, [navigate]);
 
@@ -82,15 +82,7 @@ function Register({ setUser }) {
           value={form.username}
           onChange={handleChange}
           required
-          sx={{
-          '& label': { color: '#5D3A00' },
-          '& label.Mui-focused': { color: '#5D3A00' },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': { borderColor: '#5D3A00' },
-            '&:hover fieldset': { borderColor: '#5D3A00' },
-            '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-            },
-          }}
+          sx={textFieldStyle}
         />
 
         <TextField
@@ -101,16 +93,8 @@ function Register({ setUser }) {
           value={form.email}
           onChange={handleChange}
           required
-          sx={{
-            '& label': { color: '#5D3A00' },
-            '& label.Mui-focused': { color: '#5D3A00' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: '#5D3A00' },
-              '&:hover fieldset': { borderColor: '#5D3A00' },
-              '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
+          sx={textFieldStyle}
+        />
 
         <TextField
           fullWidth
@@ -120,17 +104,9 @@ function Register({ setUser }) {
           value={form.password}
           onChange={handleChange}
           required
-          sx={{
-            '& label': { color: '#5D3A00' },
-            '& label.Mui-focused': { color: '#5D3A00' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: '#5D3A00' },
-              '&:hover fieldset': { borderColor: '#5D3A00' },
-              '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
-              },
-            }}
-          />
-          
+          sx={textFieldStyle}
+        />
+
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Typography fontWeight="bold">Role:</Typography>
           <Button
@@ -170,6 +146,21 @@ function Register({ setUser }) {
       </Container>
   );
 }
+
+
+export default Register;
+
+
+
+const textFieldStyle = {
+  '& label': { color: '#5D3A00' },
+  '& label.Mui-focused': { color: '#5D3A00' },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': { borderColor: '#5D3A00' },
+    '&:hover fieldset': { borderColor: '#5D3A00' },
+    '&.Mui-focused fieldset': { borderColor: '#5D3A00' },
+  },
+};
 
 export default Register;
 

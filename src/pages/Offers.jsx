@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getOffers } from '../services/offers';
+import {
+  Container,
+  Typography,
+  Paper,
+  Box,
+  Divider,
+} from '@mui/material';
 
 function Offers() {
   const [offers, setOffers] = useState([]);
@@ -20,25 +27,40 @@ function Offers() {
     fetchOffers();
   }, []);
 
-  if (loading) return <p>Loading offers...</p>;
+  if (loading) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Typography>Loading offers...</Typography>
+      </Container>
+    );
+  }
 
   return (
-    <div className="offers-page">
-      <h2>Submitted Offers</h2>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Submitted Offers
+      </Typography>
+      <Divider sx={{ mb: 3 }} />
+
       {offers.length === 0 ? (
-        <p>No offers submitted yet.</p>
+        <Typography>No offers submitted yet.</Typography>
       ) : (
-        <ul className="offers-list">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {offers.map((offer) => (
-            <li key={offer.id} className="offer-item">
-              <p><strong>Offer ID:</strong> {offer.id}</p>
-              <p><strong>Load ID:</strong> {offer.load}</p>
-              <p><strong>Offer Amount:</strong> ${offer.offer_amount}</p>
-            </li>
+            <Paper key={offer.id} variant="outlined" sx={{ p: 2 }}>
+              <Typography variant="h6">Offer ID: {offer.id}</Typography>
+              <Typography><strong>Load ID:</strong> {offer.load}</Typography>
+              <Typography><strong>Offer Amount:</strong> ${Number(offer.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Typography>
+              <Typography><strong>Status:</strong> {offer.status}</Typography>
+              {offer.status === "declined" && (
+                <Typography color="error"><strong>Declined Reason:</strong> {offer.declined_reason || "Not specified"}</Typography>
+              )}
+              <Typography><strong>Submitted:</strong> {new Date(offer.submitted_at).toLocaleDateString()}</Typography>
+            </Paper>
           ))}
-        </ul>
+        </Box>
       )}
-    </div>
+    </Container>
   );
 }
 
