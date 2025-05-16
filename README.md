@@ -82,5 +82,5 @@
 Stay tuned for more updates as **FreightXchange** evolves to meet the needs of today’s freight professionals.
 
 
-[Project planning link] (https://trello.com/b/KemYWnSg/ga-final-project-load-boards)
+[Project planning link](https://trello.com/b/KemYWnSg/ga-final-project-load-boards)
 
