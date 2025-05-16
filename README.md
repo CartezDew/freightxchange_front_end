@@ -83,4 +83,6 @@ Stay tuned for more updates as **FreightXchange** evolves to meet the needs of t
 
 
 [Project planning link](https://trello.com/b/KemYWnSg/ga-final-project-load-boards)
+[back end](https://github.com/CartezDew/freightxchange_back_end)
+
 
