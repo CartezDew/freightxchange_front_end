@@ -1,8 +1,5 @@
 # FreightXchange
 
-🖼️ Screenshot/Logo
-
-![image](https://i.postimg.cc/ZYvY4Wr9/Screenshot-2025-04-06-at-10-05-12-PM.png)
 
 **FreightXchange** is a full-stack web platform designed to connect brokers and carriers in the freight industry. It streamlines how loads are posted, bids are submitted, and deals are made. With built-in bid management and profile-based role views, FreightXchange removes the friction from freight booking and helps logistics professionals get work done—fast.
 
@@ -43,17 +40,17 @@
 
 ## 🖼️ Wireframes & UI
 
-### Main Wireframe  
-![image](https://i.postimg.cc/1zDhRVZW/temp-Image-Ax-XYha.avif)
+### Home Page  
+![image](https://i.postimg.cc/hjpSkRWs/Screenshot-2025-05-15-at-8-04-36-PM.png)
 
-### Load Details  
-![image](https://i.postimg.cc/xTfxNnx5/temp-Image-Muy-BG3.avif)
+### Carrier Profile  
+![image](https://i.postimg.cc/HnrCFJtW/Screenshot-2025-05-15-at-8-06-23-PM.png)
 
-### Edit Load Page  
-![image](https://i.postimg.cc/sxXgZgTk/temp-Image-IJx-Xdg.avif)
+### Loads Page  
+![image](https://i.postimg.cc/76QF1HrF/Screenshot-2025-05-15-at-8-09-19-PM.png)
 
 ### Entity Relationship Diagram (ERD)  
-![image](https://i.postimg.cc/XvYd4dFW/temp-Images0-Ar1n.avif)
+![image](https://i.postimg.cc/1zRRJ3bX/image-1.png)
 
 ---
 

@@ -20,6 +20,16 @@ function Nav({ user }) {
   const isAddLoadPage = location.pathname === "/loads/new";
   const isLoadsPage = location.pathname === "/loads";
 
+  const formatName = (name) =>
+    name
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+  const displayName = user
+    ? formatName(user.username || user.user?.username || user.id || "User")
+    : "";
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#fff8f0', boxShadow: 1 }}>
       <Toolbar
@@ -37,7 +47,7 @@ function Nav({ user }) {
           />
           {user && (
             <Typography variant="body1" sx={{ fontWeight: 500, color: '#5d4037' }}>
-              Welcome, {user.username || user.user?.username || "User"}
+              Welcome, {displayName}
             </Typography>
           )}
         </Box>
